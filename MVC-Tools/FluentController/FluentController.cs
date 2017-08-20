@@ -11,8 +11,18 @@ namespace FluentController
     /// <summary>
     /// The base class for fluent controllers
     /// </summary>
-    public abstract class ControllerBase : Controller
+    public abstract class FluentController : Controller
     {
+        /// <summary>
+        /// The error result to use if ther isn't one specified.
+        /// </summary>
+        public static IActionResult DefaultError { get; set; } = new BadRequestResult();
+
+        /// <summary>
+        /// The success result to use if there isn't one specified.
+        /// </summary>
+        public static IActionResult DefaultSuccess { get; set; } = new EmptyResult();
+
         /// <summary>
         /// Creates a <see cref="XmlResult"/> object that serializes the specified
         /// <paramref name="data"/> object to XML.
@@ -30,20 +40,20 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Validates the client input.
+        /// Validates the client input and sets the model returning action for the fluent action.
         /// </summary>
         /// <typeparam name="TClient">The type of the client input.</typeparam>
-        /// <typeparam name="TModel">The type of the model for the success result.</typeparam>
         /// <param name="input">The client input.</param>
+        /// <param name="firstErrorOnly">Stop validation after the first error?</param>
         /// <returns>A fluent action builder.</returns>
         [NonAction]
-        protected FluentAction<TClient, TModel> CheckRequest<TClient, TModel>(TClient input) where TClient : IValidatableObject
+        protected FluentParameter<TClient> CheckRequest<TClient>(TClient input, bool firstErrorOnly = false) where TClient : IValidatableObject
         {
-            return new FluentAction<TClient, TModel>().CheckRequest(input);
+            return new FluentParameter<TClient>(input, firstErrorOnly);
         }
 
         /// <summary>
-        /// Sets the model returning action for the fluent action builer.
+        /// Sets the model returning action for the fluent action.
         /// </summary>
         /// <typeparam name="TModel">The type of the input for the success result.</typeparam>
         /// <param name="action">This action takes no parameters and returns a <typeparamref name="TModel"/>.</param>
@@ -52,31 +62,6 @@ namespace FluentController
         protected FluentAction<IValidatableObject, TModel> Action<TModel>([NotNull] Func<Task<TModel>> action)
         {
             return new FluentAction<IValidatableObject, TModel>().Action(async actionParameter => await action());
-        }
-
-        /// <summary>
-        /// Adds an action to execute to this fluent builder.
-        /// These actions will all run at the same time.
-        /// </summary>
-        /// <param name="action">This action takes no parameters and returns nothing.</param>
-        /// <returns>A fluent action builder.</returns>
-        [NonAction]
-        protected FluentAction<IValidatableObject, object> Action([NotNull] Func<Task> action)
-        {
-            return new FluentAction<IValidatableObject, object>().Action(async actionParameter => await action());
-        }
-
-        /// <summary>
-        /// Adds an action to execute to this fluent builder.
-        /// These actions will all run at the same time.
-        /// </summary>
-        /// <typeparam name="TClient">The type of the client input.</typeparam>
-        /// <param name="action">This action has one parameter and returns nothing.</param>
-        /// <returns>A fluent action builder.</returns>
-        [NonAction]
-        protected FluentAction<TClient, object> Action<TClient>([NotNull] Func<TClient, Task> action) where TClient : IValidatableObject
-        {
-            return new FluentAction<TClient, object>().Action(action);
         }
     }
 }
