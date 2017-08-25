@@ -2,13 +2,20 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication.Controllers
+// ReSharper disable All
+namespace WebApplication
 {
     public interface IRepository
     {
         Task Add(Param p);
+
+        Task Delete(Param p);
+
         Task<string> Get(Param p);
+
         Task<string> GetDefault();
+
+        Task Update(Param p);
     }
 
     public class Repository : IRepository
@@ -20,14 +27,24 @@ namespace WebApplication.Controllers
             await Task.Run(() => Values.Add(p.Value));
         }
 
+        public async Task Delete(Param p)
+        {
+            await Task.Run(() => Values.RemoveAt(p.Index));
+        }
+
         public async Task<string> Get(Param p)
         {
-            return await Task.FromResult(Values[p.Int]);
+            return await Task.FromResult(Values[p.Index]);
         }
 
         public async Task<string> GetDefault()
         {
             return await Task.FromResult(Values.FirstOrDefault());
+        }
+
+        public async Task Update(Param p)
+        {
+            await Task.Run(() => Values[p.Index] = p.Value);
         }
     }
 }

@@ -1,7 +1,7 @@
-using System.Text;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -32,7 +32,7 @@ namespace ResultTypes
         {
             _objectToSerialize = objectToSerialize;
             _xmlSerializer = attributeOverrides == null ?
-                new XmlSerializer(_objectToSerialize.GetType()) : 
+                new XmlSerializer(_objectToSerialize.GetType()) :
                 new XmlSerializer(_objectToSerialize.GetType(), attributeOverrides);
         }
 

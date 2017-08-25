@@ -53,5 +53,15 @@ namespace FluentController
         {
             return new FluentAction<TClient, TModel>(_actionParameter, _validationErrors, action);
         }
+
+        /// <summary>
+        /// Sets the model returning action for the fluent action.
+        /// </summary>
+        /// <param name="action">The action to perform.</param>
+        /// <returns></returns>
+        public FluentAction<TClient, object> Action([NotNull] Func<TClient, Task> action)
+        {
+            return new FluentAction<TClient, object>(_actionParameter, _validationErrors, x => null).Action(action);
+        }
     }
 }

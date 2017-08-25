@@ -26,16 +26,6 @@ namespace FluentController
         private readonly TClient _actionParameter;
 
         /// <summary>
-        /// What to do on action failure.
-        /// </summary>
-        private Func<Exception, IEnumerable<ValidationResult>, IActionResult> _error;
-        
-        /// <summary>
-        /// What to do on action success.
-        /// </summary>
-        private Func<TModel, IActionResult> _success;
-
-        /// <summary>
         /// The other tasks to run.
         /// </summary>
         private readonly IList<Func<TClient, Task>> _taskList = new List<Func<TClient, Task>>();
@@ -44,6 +34,16 @@ namespace FluentController
         /// Any errors that were found during validation.
         /// </summary>
         private readonly IList<ValidationResult> _validationErrors;
+
+        /// <summary>
+        /// What to do on action failure.
+        /// </summary>
+        private Func<Exception, IEnumerable<ValidationResult>, IActionResult> _error;
+
+        /// <summary>
+        /// What to do on action success.
+        /// </summary>
+        private Func<TModel, IActionResult> _success;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}"/> class.
@@ -99,7 +99,7 @@ namespace FluentController
             {
                 if (_validationErrors.Any()) return ErrorInvoker();
 
-                if(_actionModel == null) throw new InvalidOperationException($"{nameof(FluentParameter<TClient>.Action)} must be called prior to calling {nameof(ResponseAsync)}.");
+                if (_actionModel == null) throw new InvalidOperationException($"{nameof(FluentParameter<TClient>.Action)} must be called prior to calling {nameof(ResponseAsync)}.");
                 var model = await _actionModel(_actionParameter);
 
                 // The ToList() call is important for ensuring that the tasks run simultaneously.
@@ -109,7 +109,7 @@ namespace FluentController
                     await task;
                 }
 
-                return _success?.Invoke(model) ?? FluentController.DefaultSuccess;
+                return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
             }
             catch (Exception e)
             {
@@ -135,7 +135,7 @@ namespace FluentController
         /// <returns>An error result.</returns>
         private IActionResult ErrorInvoker(Exception exception = null)
         {
-            return _error?.Invoke(exception, _validationErrors) ?? FluentController.DefaultError;
+            return _error?.Invoke(exception, _validationErrors) ?? FluentControllerBase.DefaultError;
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentController;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace WebApplication.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : FluentController.FluentController
+    public class ValuesController : FluentControllerBase
     {
         private readonly IRepository _repository;
 
@@ -13,11 +14,23 @@ namespace WebApplication.Controllers
             _repository = repository;
         }
 
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var p = new Param { Index = id };
+            return await CheckRequest(p).Action(_repository.Delete).ResponseAsync();
+        }
+
         // GET api/values
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return await Action(_repository.GetDefault).ResponseAsync();
+            return await
+                 Action(_repository.GetDefault)
+                .Success(model => Xml($"Model:{model}"))
+                .Error((e, vr) => Xml(e))
+                .ResponseAsync();
         }
 
         // GET api/values/5
@@ -29,21 +42,17 @@ namespace WebApplication.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Param param)
+        public async Task<IActionResult> Post([FromBody]Param param)
         {
-            CheckRequest(param).Action(_repository.Add);
+            return await CheckRequest(param).Action(_repository.Add).ResponseAsync();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, [FromBody]string value)
         {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var p = new Param { Index = id, Value = value };
+            return await CheckRequest(p).Action(_repository.Update).ResponseAsync();
         }
     }
 }
