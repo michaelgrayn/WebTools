@@ -48,14 +48,6 @@ namespace FluentController
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}"/> class.
         /// </summary>
-        public FluentAction()
-        {
-            _validationErrors = new List<ValidationResult>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}"/> class.
-        /// </summary>
         /// <param name="input">The client input.</param>
         /// <param name="validationResults">The results from validating the client input.</param>
         /// <param name="action">The action to perform, which returns the model.</param>
@@ -99,15 +91,13 @@ namespace FluentController
             {
                 if (_validationErrors.Any()) return ErrorInvoker();
 
-                if (_actionModel == null) throw new InvalidOperationException($"{nameof(FluentParameter<TClient>.Action)} must be called prior to calling {nameof(ResponseAsync)}.");
-                var model = await _actionModel(_actionParameter);
+                TModel model;
+                if (_actionModel == null) model = default(TModel);
+                else model = await _actionModel(_actionParameter);
 
                 // The ToList() call is important for ensuring that the tasks run simultaneously.
                 var tasks = _taskList.Select(task => task(_actionParameter)).ToList();
-                foreach (var task in tasks)
-                {
-                    await task;
-                }
+                foreach (var task in tasks) await task;
 
                 return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
             }

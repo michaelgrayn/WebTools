@@ -28,16 +28,21 @@ namespace WebApplication.Controllers
         {
             return await
                  Action(_repository.GetDefault)
-                .Success(model => Xml($"Model:{model}"))
-                .Error((e, vr) => Xml(e))
+                .Success(model => Xml(new Param{ Value = model }))
+                .Error((e, vr) => new BadRequestResult())
                 .ResponseAsync();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Param param)
+        public async Task<IActionResult> Get(int id)
         {
-            return await CheckRequest(param).Action(_repository.Get).ResponseAsync();
+            var p = new Param { Index = id };
+            return await 
+                 CheckRequest(p)
+                 .Action(_repository.Get)
+                .Success(model => Json(new Param { Index = id, Value = model }))
+                .ResponseAsync();
         }
 
         // POST api/values

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ResultTypes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -48,7 +49,7 @@ namespace FluentController
         [NonAction]
         protected static FluentAction<IValidatableObject, TModel> Action<TModel>([NotNull] Func<Task<TModel>> action)
         {
-            return new FluentAction<IValidatableObject, TModel>().Action(async actionParameter => await action());
+            return new FluentAction<IValidatableObject, TModel>(default(IValidatableObject), new List<ValidationResult>(), async actionParameter => await action());
         }
 
         /// <summary>
