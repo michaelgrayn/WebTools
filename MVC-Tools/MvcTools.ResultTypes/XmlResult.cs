@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace ResultTypes
+namespace MvcTools.ResultTypes
 {
     /// <summary>
     /// Represents a class that is used to send XML-formatted content to the response.
@@ -27,17 +27,18 @@ namespace ResultTypes
         /// Initializes a new instance of the <see cref="XmlResult"/> class.
         /// </summary>
         /// <param name="objectToSerialize">The object to serialize to XML.</param>
-        /// <param name="attributeOverrides"><see cref="XmlAttributeOverrides"/> to use during serialization.</param>
+        /// <param name="attributeOverrides">
+        /// <see cref="XmlAttributeOverrides"/> to use during serialization.
+        /// </param>
         public XmlResult(object objectToSerialize, [CanBeNull] XmlAttributeOverrides attributeOverrides)
         {
             _objectToSerialize = objectToSerialize;
-            _xmlSerializer = attributeOverrides == null ?
-                new XmlSerializer(_objectToSerialize.GetType()) :
-                new XmlSerializer(_objectToSerialize.GetType(), attributeOverrides);
+            _xmlSerializer = new XmlSerializer(_objectToSerialize.GetType(), attributeOverrides);
         }
 
         /// <summary>
-        /// Serialises the object that was passed into the constructor to XML and writes the corresponding XML to the result stream.
+        /// Serialises the object that was passed into the constructor to XML and writes the
+        /// corresponding XML to the result stream.
         /// </summary>
         /// <param name="context">The controller context for the current request.</param>
         public override void ExecuteResult(ActionContext context)
@@ -52,7 +53,8 @@ namespace ResultTypes
         }
 
         /// <summary>
-        /// Serialises the object that was passed into the constructor to XML and writes the corresponding XML to the result stream asynchronously.
+        /// Serialises the object that was passed into the constructor to XML and writes the
+        /// corresponding XML to the result stream asynchronously.
         /// </summary>
         /// <param name="context">The controller context for the current request.</param>
         public override async Task ExecuteResultAsync(ActionContext context)

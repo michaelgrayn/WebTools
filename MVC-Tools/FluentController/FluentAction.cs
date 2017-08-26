@@ -59,8 +59,7 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Adds an action to execute to this fluent builder.
-        /// These actions will all run at the same time.
+        /// Adds an action to execute to this fluent builder. These actions will all run at the same time.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns>A fluent action.</returns>
@@ -82,7 +81,8 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Performs the action(s) and returns a result. The action that returns the model will run before all other tasks.
+        /// Performs the action(s) and returns a result. The action that returns the model will run
+        /// before all other tasks.
         /// </summary>
         /// <returns>The resulting response to the request.</returns>
         public async Task<IActionResult> ResponseAsync()

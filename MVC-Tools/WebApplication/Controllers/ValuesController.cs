@@ -28,7 +28,7 @@ namespace WebApplication.Controllers
         {
             return await
                  Action(_repository.GetDefault)
-                .Success(model => Xml(new Param{ Value = model }))
+                .Success(model => Xml(new Param { Value = model }))
                 .Error((e, vr) => new BadRequestResult())
                 .ResponseAsync();
         }
@@ -38,7 +38,7 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var p = new Param { Index = id };
-            return await 
+            return await
                  CheckRequest(p)
                  .Action(_repository.Get)
                 .Success(model => Json(new Param { Index = id, Value = model }))
