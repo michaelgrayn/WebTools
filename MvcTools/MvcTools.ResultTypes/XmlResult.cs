@@ -16,7 +16,7 @@ namespace MvcTools.ResultTypes
         /// <summary>
         /// The object to be serialized to XML.
         /// </summary>
-        private readonly object _objectToSerialize;
+        private readonly object _data;
 
         /// <summary>
         /// The serializer to use on the object.
@@ -26,14 +26,14 @@ namespace MvcTools.ResultTypes
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlResult"/> class.
         /// </summary>
-        /// <param name="objectToSerialize">The object to serialize to XML.</param>
+        /// <param name="data">The object to serialize to XML.</param>
         /// <param name="attributeOverrides">
         /// <see cref="XmlAttributeOverrides"/> to use during serialization.
         /// </param>
-        public XmlResult(object objectToSerialize, [CanBeNull] XmlAttributeOverrides attributeOverrides)
+        public XmlResult(object data, [CanBeNull] XmlAttributeOverrides attributeOverrides)
         {
-            _objectToSerialize = objectToSerialize;
-            _xmlSerializer = new XmlSerializer(_objectToSerialize.GetType(), attributeOverrides);
+            _data = data;
+            _xmlSerializer = new XmlSerializer(_data.GetType(), attributeOverrides);
         }
 
         /// <summary>
@@ -43,12 +43,12 @@ namespace MvcTools.ResultTypes
         /// <param name="context">The controller context for the current request.</param>
         public override void ExecuteResult(ActionContext context)
         {
-            if (_objectToSerialize == null) return;
+            if (_data == null) return;
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/xml; charset=utf-8";
             using (var xmlWriter = new XmlTextWriter(context.HttpContext.Response.Body, Encoding.UTF8))
             {
-                _xmlSerializer.Serialize(xmlWriter, _objectToSerialize);
+                _xmlSerializer.Serialize(xmlWriter, _data);
             }
         }
 

@@ -38,7 +38,7 @@ namespace FluentController
         /// <summary>
         /// What to do on action failure.
         /// </summary>
-        private Func<Exception, IEnumerable<ValidationResult>, IActionResult> _error;
+        private Func<Exception, IEnumerable<ValidationResult>, TClient, IActionResult> _error;
 
         /// <summary>
         /// What to do on action success.
@@ -74,7 +74,7 @@ namespace FluentController
         /// </summary>
         /// <param name="error">What to do if the action fails.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TClient, TModel> Error(Func<Exception, IEnumerable<ValidationResult>, IActionResult> error)
+        public FluentAction<TClient, TModel> Error(Func<Exception, IEnumerable<ValidationResult>, TClient, IActionResult> error)
         {
             _error = error;
             return this;
@@ -125,7 +125,7 @@ namespace FluentController
         /// <returns>An error result.</returns>
         private IActionResult ErrorInvoker(Exception exception = null)
         {
-            return _error?.Invoke(exception, _validationErrors) ?? FluentControllerBase.DefaultError;
+            return _error?.Invoke(exception, _validationErrors, _actionParameter) ?? FluentControllerBase.DefaultError;
         }
     }
 }

@@ -25,8 +25,8 @@ namespace FluentController
         public static IActionResult DefaultSuccess { get; set; } = new EmptyResult();
 
         /// <summary>
-        /// Creates a <see cref="XmlResult"/> object that serializes the specified <paramref
-        /// name="data"/> object to XML.
+        /// Creates a <see cref="XmlResult"/> object that serializes the specified
+        /// <paramref name="data"/> object to XML.
         /// </summary>
         /// <param name="data">The object to serialize.</param>
         /// <param name="xmlAttributeOverrides">The <see cref="XmlAttributeOverrides"/> to be used.</param>
@@ -60,9 +60,9 @@ namespace FluentController
         /// <param name="firstErrorOnly">Stop validation after the first error?</param>
         /// <returns>A fluent action builder.</returns>
         [NonAction]
-        protected static FluentParameter<TClient> CheckRequest<TClient>(TClient input, bool firstErrorOnly = false) where TClient : IValidatableObject
+        protected FluentParameter<TClient> CheckRequest<TClient>(TClient input, bool firstErrorOnly = false) where TClient : IValidatableObject
         {
-            return new FluentParameter<TClient>(input, firstErrorOnly);
+            return new FluentParameter<TClient>(input, firstErrorOnly, ModelState.IsValid);
         }
     }
 }

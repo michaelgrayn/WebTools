@@ -29,7 +29,7 @@ namespace WebApplication.Controllers
             return await
                  Action(_repository.GetDefault)
                 .Success(model => Xml(new Param { Value = model }))
-                .Error((e, vr) => new BadRequestResult())
+                .Error((e, vr, ci) => new BadRequestResult())
                 .ResponseAsync();
         }
 

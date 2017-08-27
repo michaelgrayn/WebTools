@@ -28,8 +28,9 @@ namespace FluentController
         /// </summary>
         /// <param name="clientInput">The client input.</param>
         /// <param name="firstErrorOnly">Stop validating after one error?</param>
+        /// <param name="modelState">Is the model state valid?</param>
         /// <returns>A fluent action.</returns>
-        internal FluentParameter([NotNull] TClient clientInput, bool firstErrorOnly)
+        internal FluentParameter([NotNull] TClient clientInput, bool firstErrorOnly, bool modelState)
         {
             _actionParameter = clientInput;
             var validationErrors = clientInput.Validate(new ValidationContext(clientInput));
@@ -38,9 +39,10 @@ namespace FluentController
                 var validationResult = validationErrors.FirstOrDefault();
                 _validationErrors = new List<ValidationResult>();
                 if (validationResult != null) _validationErrors.Add(validationResult);
-                return;
             }
-            _validationErrors = validationErrors.ToList();
+            else _validationErrors = validationErrors.ToList();
+            if (modelState) return;
+            _validationErrors.Add(new ValidationResult("The model state is invalid."));
         }
 
         /// <summary>
