@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MvcTools.Middleware;
 
 // ReSharper disable All
 namespace WebApplication
@@ -31,14 +30,14 @@ namespace WebApplication
             FluentControllerBase.DefaultSuccess = new EmptyResult();
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            app.UseAntiForgery().UseMvc();
+            app.UseMvc();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             services.AddTransient<IRepository, Repository>();
         }
     }

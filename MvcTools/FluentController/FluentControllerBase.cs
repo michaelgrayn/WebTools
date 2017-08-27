@@ -41,19 +41,19 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Sets the model returning action for the fluent action.
+        /// Sets the model returning action for the fluent builder.
         /// </summary>
         /// <typeparam name="TModel">The type of the input for the success result.</typeparam>
         /// <param name="action">This action takes no parameters and returns a <typeparamref name="TModel"/>.</param>
         /// <returns>A fluent action builder.</returns>
         [NonAction]
-        protected static FluentAction<IValidatableObject, TModel> Action<TModel>([NotNull] Func<Task<TModel>> action)
+        protected static FluentAction<object, TModel> Action<TModel>([NotNull] Func<Task<TModel>> action)
         {
-            return new FluentAction<IValidatableObject, TModel>(default(IValidatableObject), new List<ValidationResult>(), async actionParameter => await action());
+            return new FluentAction<object, TModel>(null, new List<ValidationResult>(), async actionParameter => await action());
         }
 
         /// <summary>
-        /// Validates the client input and sets the model returning action for the fluent action.
+        /// Validates the client input.
         /// </summary>
         /// <typeparam name="TClient">The type of the client input.</typeparam>
         /// <param name="input">The client input.</param>

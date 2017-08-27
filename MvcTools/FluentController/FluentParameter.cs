@@ -29,7 +29,7 @@ namespace FluentController
         /// <param name="clientInput">The client input.</param>
         /// <param name="firstErrorOnly">Stop validating after one error?</param>
         /// <returns>A fluent action.</returns>
-        public FluentParameter([NotNull] TClient clientInput, bool firstErrorOnly = false)
+        internal FluentParameter([NotNull] TClient clientInput, bool firstErrorOnly)
         {
             _actionParameter = clientInput;
             var validationErrors = clientInput.Validate(new ValidationContext(clientInput));
@@ -44,7 +44,7 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Sets the model returning action for the fluent action.
+        /// Sets the model returning action for the fluent builder.
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <param name="action">The action to perform.</param>
@@ -55,7 +55,7 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Sets the model returning action for the fluent action.
+        /// Adds an action to execute to this fluent builder. These actions will all run at the same time.
         /// </summary>
         /// <param name="action">The action to perform.</param>
         /// <returns></returns>

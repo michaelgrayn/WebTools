@@ -13,7 +13,7 @@ namespace FluentController
     /// </summary>
     /// <typeparam name="TClient">The type of the input to the action method.</typeparam>
     /// <typeparam name="TModel">The type of the input for the success method.</typeparam>
-    public class FluentAction<TClient, TModel> where TClient : IValidatableObject
+    public class FluentAction<TClient, TModel>
     {
         /// <summary>
         /// The action to perform that returns a model for the success result.

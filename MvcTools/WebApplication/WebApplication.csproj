@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluentController\FluentController.csproj" />
-    <ProjectReference Include="..\MvcTools.Middleware\MvcTools.Middleware.csproj" />
   </ItemGroup>
 
 </Project>
