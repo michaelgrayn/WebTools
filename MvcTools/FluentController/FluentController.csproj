@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A fluent builder to help reduce the amount of code in your controllers.</Description>
+    <Copyright>Matthew DeJonge</Copyright>
+    <PackageProjectUrl>https://github.com/mhdejonge/MVC-Tools</PackageProjectUrl>
+    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/mhdejonge/MVC-Tools</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <NeutralLanguage />
+    <Authors>Matthew DeJonge</Authors>
+    <Company />
+    <Product>MvcTools</Product>
   </PropertyGroup>
 
   <ItemGroup>
