@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<Authors>Matthew DeJonge</Authors>
+    <Company />
+    <Product>MvcTools</Product>
+    <Description>Additional result types to return from controllers.</Description>
+    <Copyright>Matthew DeJonge</Copyright>
+	<PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mhdejonge/MVC-Tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mhdejonge/MVC-Tools</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <Copyright>Matthew DeJonge</Copyright>
-    <Authors>Matthew DeJonge</Authors>
-    <Company />
-    <Description>Additional result types to return from controllers.</Description>
-    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <NeutralLanguage />
   </PropertyGroup>
 
   <ItemGroup>
