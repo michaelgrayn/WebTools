@@ -1,13 +1,17 @@
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
+// MvcTools.MvcTools.ResultTypes.XmlResult.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
 namespace MvcTools.ResultTypes
 {
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Xml;
+    using System.Xml.Serialization;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+
     /// <summary>
     /// Represents a class that is used to send XML-formatted content to the response.
     /// </summary>
@@ -24,12 +28,10 @@ namespace MvcTools.ResultTypes
         private readonly XmlSerializer _xmlSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlResult"/> class.
+        /// Initializes a new instance of the <see cref="XmlResult" /> class.
         /// </summary>
         /// <param name="data">The object to serialize to XML.</param>
-        /// <param name="attributeOverrides">
-        /// <see cref="XmlAttributeOverrides"/> to use during serialization.
-        /// </param>
+        /// <param name="attributeOverrides"><see cref="XmlAttributeOverrides" /> to use during serialization.</param>
         public XmlResult(object data, [CanBeNull] XmlAttributeOverrides attributeOverrides)
         {
             _data = data;

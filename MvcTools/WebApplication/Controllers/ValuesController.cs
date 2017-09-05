@@ -1,9 +1,13 @@
-﻿using FluentController;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿// MvcTools.WebApplication.ValuesController.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
 namespace WebApplication.Controllers
 {
+    using System.Threading.Tasks;
+    using FluentController;
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     public class ValuesController : FluentControllerBase
     {
@@ -27,10 +31,10 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> Get()
         {
             return await
-                 Action(_repository.GetDefault)
-                .Success(model => Xml(new Param { Value = model }))
-                .Error((e, vr, ci) => new BadRequestResult())
-                .ResponseAsync();
+                Action(_repository.GetDefault)
+                    .Success(model => Xml(new Param { Value = model }))
+                    .Error(e => new BadRequestResult())
+                    .ResponseAsync();
         }
 
         // GET api/values/5
@@ -39,22 +43,22 @@ namespace WebApplication.Controllers
         {
             var p = new Param { Index = id };
             return await
-                 CheckRequest(p)
-                 .Action(_repository.Get)
-                .Success(model => Json(new Param { Index = id, Value = model }))
-                .ResponseAsync();
+                CheckRequest(p)
+                    .Action(_repository.Get)
+                    .Success(model => Json(new Param { Index = id, Value = model }))
+                    .ResponseAsync();
         }
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Param param)
+        public async Task<IActionResult> Post([FromBody] Param param)
         {
             return await CheckRequest(param).Action(_repository.Add).ResponseAsync();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, [FromBody] string value)
         {
             var p = new Param { Index = id, Value = value };
             return await CheckRequest(p).Action(_repository.Update).ResponseAsync();

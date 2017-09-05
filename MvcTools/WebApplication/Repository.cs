@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// MvcTools.WebApplication.Repository.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
-// ReSharper disable All
 namespace WebApplication
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public interface IRepository
     {
         Task Add(Param p);

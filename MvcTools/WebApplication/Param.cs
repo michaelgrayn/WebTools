@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿// MvcTools.WebApplication.Param.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
-// ReSharper disable All
 namespace WebApplication
 {
-    public class Param : IValidatableObject
+    using System.ComponentModel.DataAnnotations;
+    using FluentController;
+
+    public class Param : IViewModel<Param>
     {
+        [Range(0, int.MaxValue)]
         public int Index { get; set; }
 
         public string Value { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var result = new List<ValidationResult>();
-            if (Index < 1) result.Add(new ValidationResult($"{nameof(Index)} must be positive.", new List<string> { nameof(Index) }));
-            return result;
-        }
+        Param IViewModel<Param>.Value() => this;
+
+        bool IViewModel<Param>.Valid() => Index >= 0;
     }
 }

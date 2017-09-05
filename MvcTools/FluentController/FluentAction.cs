@@ -1,44 +1,42 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// MvcTools.FluentController.FluentAction.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
 namespace FluentController
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc;
+
     /// <summary>
     /// A builder for fluent controller actions.
     /// </summary>
-    /// <typeparam name="TClient">The type of the input to the action method.</typeparam>
+    /// <typeparam name="TViewModel">The type of the view model for the action.</typeparam>
     /// <typeparam name="TModel">The type of the input for the success method.</typeparam>
-    public class FluentAction<TClient, TModel>
+    public class FluentAction<TViewModel, TModel>
     {
         /// <summary>
         /// The action to perform that returns a model for the success result.
         /// </summary>
-        private readonly Func<TClient, Task<TModel>> _actionModel;
-
-        /// <summary>
-        /// The parameter to pass to the action method.
-        /// </summary>
-        private readonly TClient _actionParameter;
+        private readonly Func<TViewModel, Task<TModel>> _actionModel;
 
         /// <summary>
         /// The other tasks to run.
         /// </summary>
-        private readonly IList<Func<TClient, Task>> _taskList = new List<Func<TClient, Task>>();
+        private readonly IList<Func<TViewModel, Task>> _taskList = new List<Func<TViewModel, Task>>();
 
         /// <summary>
-        /// Any errors that were found during validation.
+        /// The parameter to pass to the action method.
         /// </summary>
-        private readonly IList<ValidationResult> _validationErrors;
+        private readonly FluentParameter<TViewModel> _viewModel;
 
         /// <summary>
         /// What to do on action failure.
         /// </summary>
-        private Func<Exception, IEnumerable<ValidationResult>, TClient, IActionResult> _error;
+        private Func<Exception, IActionResult> _error;
 
         /// <summary>
         /// What to do on action success.
@@ -46,15 +44,13 @@ namespace FluentController
         private Func<TModel, IActionResult> _success;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}"/> class.
+        /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}" /> class.
         /// </summary>
-        /// <param name="input">The client input.</param>
-        /// <param name="validationResults">The results from validating the client input.</param>
+        /// <param name="viewModel">The view model.</param>
         /// <param name="action">The action to perform, which returns the model.</param>
-        internal FluentAction(TClient input, IList<ValidationResult> validationResults, Func<TClient, Task<TModel>> action)
+        internal FluentAction(FluentParameter<TViewModel> viewModel, Func<TViewModel, Task<TModel>> action)
         {
-            _actionParameter = input;
-            _validationErrors = validationResults;
+            _viewModel = viewModel;
             _actionModel = action;
         }
 
@@ -63,7 +59,7 @@ namespace FluentController
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TClient, TModel> Action([NotNull] Func<TClient, Task> action)
+        public FluentAction<TViewModel, TModel> Action([NotNull] Func<TViewModel, Task> action)
         {
             _taskList.Add(action);
             return this;
@@ -74,29 +70,28 @@ namespace FluentController
         /// </summary>
         /// <param name="error">What to do if the action fails.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TClient, TModel> Error(Func<Exception, IEnumerable<ValidationResult>, TClient, IActionResult> error)
+        public FluentAction<TViewModel, TModel> Error(Func<Exception, IActionResult> error)
         {
             _error = error;
             return this;
         }
 
         /// <summary>
-        /// Performs the action(s) and returns a result. The action that returns the model will run
-        /// before all other tasks.
+        /// Performs the action(s) and returns a result. The action that returns the model will run before all other tasks.
         /// </summary>
         /// <returns>The resulting response to the request.</returns>
         public async Task<IActionResult> ResponseAsync()
         {
             try
             {
-                if (_validationErrors.Any()) return ErrorInvoker();
+                if (!_viewModel.Valid) return ErrorInvoker();
 
                 TModel model;
                 if (_actionModel == null) model = default(TModel);
-                else model = await _actionModel(_actionParameter);
+                else model = await _actionModel(_viewModel.ViewModel);
 
                 // The ToList() call is important for ensuring that the tasks run simultaneously.
-                var tasks = _taskList.Select(task => task(_actionParameter)).ToList();
+                var tasks = _taskList.Select(task => task(_viewModel.ViewModel)).ToList();
                 foreach (var task in tasks) await task;
 
                 return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
@@ -112,7 +107,7 @@ namespace FluentController
         /// </summary>
         /// <param name="success">What to do if the action succeeds.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TClient, TModel> Success(Func<TModel, IActionResult> success)
+        public FluentAction<TViewModel, TModel> Success(Func<TModel, IActionResult> success)
         {
             _success = success;
             return this;
@@ -125,7 +120,7 @@ namespace FluentController
         /// <returns>An error result.</returns>
         private IActionResult ErrorInvoker(Exception exception = null)
         {
-            return _error?.Invoke(exception, _validationErrors, _actionParameter) ?? FluentControllerBase.DefaultError;
+            return _error?.Invoke(exception) ?? FluentControllerBase.DefaultError;
         }
     }
 }

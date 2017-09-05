@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using System.IO;
+﻿// MvcTools.WebApplication.Program.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
 
 namespace WebApplication
 {
+    using System.IO;
+    using Microsoft.AspNetCore.Hosting;
+
     public static class Program
     {
         public static void Main()
