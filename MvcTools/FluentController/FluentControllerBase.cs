@@ -2,15 +2,15 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace FluentController
-{
-    using System;
-    using System.Threading.Tasks;
-    using System.Xml.Serialization;
-    using JetBrains.Annotations;
-    using Microsoft.AspNetCore.Mvc;
-    using MvcTools.ResultTypes;
+using System;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
+using MvcTools.ResultTypes;
 
+namespace MvcTools
+{
     /// <summary>
     /// The base class for fluent controllers
     /// </summary>
@@ -41,27 +41,27 @@ namespace FluentController
         }
 
         /// <summary>
-        /// Sets the model returning action for the fluent builder.
+        /// Sets the main action for the fluent builder.
         /// </summary>
-        /// <typeparam name="TModel">The type of the input for the success result.</typeparam>
-        /// <param name="action">This action takes no parameters and returns a <typeparamref name="TModel" />.</param>
+        /// <typeparam name="TOut">The type of the input for the success result.</typeparam>
+        /// <param name="action">This action takes no parameters and returns a <typeparamref name="TOut" />.</param>
         /// <returns>A fluent action.</returns>
         [NonAction]
-        protected static FluentAction<NoInput, TModel> Action<TModel>([NotNull] Func<Task<TModel>> action)
+        protected static FluentAction<NoInput, TOut> Action<TOut>([NotNull] Func<Task<TOut>> action)
         {
-            return new FluentAction<NoInput, TModel>(new FluentParameter<NoInput>(new NoInput(), true), async x => await action());
+            return new FluentAction<NoInput, TOut>(new FluentParameter<NoInput>(new NoInput(), true), async x => await action());
         }
 
         /// <summary>
         /// Validates the client input.
         /// </summary>
-        /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-        /// <param name="viewModel">The view model for the action.</param>
+        /// <typeparam name="TIn">The type of the client input.</typeparam>
+        /// <param name="parameter">The input to the action.</param>
         /// <returns>A fluent action.</returns>
         [NonAction]
-        protected FluentParameter<TViewModel> CheckRequest<TViewModel>(IViewModel<TViewModel> viewModel)
+        protected FluentParameter<TIn> CheckRequest<TIn>(TIn parameter) where TIn : IValidatable
         {
-            return new FluentParameter<TViewModel>(viewModel, ModelState.IsValid);
+            return new FluentParameter<TIn>(parameter, ModelState.IsValid);
         }
     }
 }

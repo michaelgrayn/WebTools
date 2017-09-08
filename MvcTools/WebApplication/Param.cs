@@ -5,17 +5,15 @@
 namespace WebApplication
 {
     using System.ComponentModel.DataAnnotations;
-    using FluentController;
+    using MvcTools;
 
-    public class Param : IViewModel<Param>
+    public class Param : IValidatable
     {
         [Range(0, int.MaxValue)]
         public int Index { get; set; }
 
         public string Value { get; set; }
 
-        Param IViewModel<Param>.Value() => this;
-
-        bool IViewModel<Param>.Valid() => Index >= 0;
+        public bool Validate() => Index >= 0;
     }
 }

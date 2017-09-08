@@ -5,8 +5,8 @@
 namespace WebApplication.Controllers
 {
     using System.Threading.Tasks;
-    using FluentController;
     using Microsoft.AspNetCore.Mvc;
+    using MvcTools;
 
     [Route("api/[controller]")]
     public class ValuesController : FluentControllerBase

@@ -4,14 +4,15 @@
 
 namespace WebApplication
 {
-    using FluentController;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using MvcTools;
 
+    // ReSharper disable All
     public class Startup
     {
         public Startup(IHostingEnvironment env)

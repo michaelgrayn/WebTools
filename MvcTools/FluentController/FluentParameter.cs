@@ -2,56 +2,54 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace FluentController
-{
-    using System;
-    using System.Threading.Tasks;
-    using JetBrains.Annotations;
+using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 
+namespace MvcTools
+{
     /// <summary>
     /// A builder for fluent controller actions.
     /// </summary>
-    /// <typeparam name="TViewModel">The type of the input to the action method.</typeparam>
-    public class FluentParameter<TViewModel>
+    /// <typeparam name="TIn">The type of the input to the main action method.</typeparam>
+    public class FluentParameter<TIn> where TIn : IValidatable
     {
-        private readonly bool _modelState;
-
         /// <summary>
-        /// The parameter to pass to the action method.
+        /// The state of the model binding.
         /// </summary>
-        private readonly IViewModel<TViewModel> _viewModel;
+        private readonly bool _modelState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentParameter{TClient}" /> class.
         /// </summary>
-        /// <param name="clientInput">The client input.</param>
+        /// <param name="parameter">The client input.</param>
         /// <param name="modelState">Is the model state valid?</param>
         /// <returns>A fluent action.</returns>
-        internal FluentParameter([NotNull] IViewModel<TViewModel> clientInput, bool modelState)
+        internal FluentParameter([NotNull] TIn parameter, bool modelState)
         {
-            _viewModel = clientInput;
+            Parameter = parameter;
             _modelState = modelState;
         }
 
         /// <summary>
         /// Is the client input valid?
         /// </summary>
-        public bool Valid => _modelState && _viewModel.Valid();
+        public bool Valid => _modelState && Parameter.Validate();
 
         /// <summary>
-        /// Gets the view model.
+        /// Gets the client input.
         /// </summary>
-        internal TViewModel ViewModel => _viewModel.Value();
+        internal TIn Parameter { get; }
 
         /// <summary>
-        /// Sets the model returning action for the fluent builder.
+        /// Sets the main action for the fluent builder.
         /// </summary>
-        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TOut">The type of the input to the success method.</typeparam>
         /// <param name="action">The action to perform.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TViewModel, TModel> Action<TModel>([NotNull] Func<TViewModel, Task<TModel>> action)
+        public FluentAction<TIn, TOut> Action<TOut>([NotNull] Func<TIn, Task<TOut>> action)
         {
-            return new FluentAction<TViewModel, TModel>(this, action);
+            return new FluentAction<TIn, TOut>(this, action);
         }
 
         /// <summary>
@@ -59,9 +57,9 @@ namespace FluentController
         /// </summary>
         /// <param name="action">The action to perform.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TViewModel, object> Action([NotNull] Func<TViewModel, Task> action)
+        public FluentAction<TIn, object> Action([NotNull] Func<TIn, Task> action)
         {
-            return new FluentAction<TViewModel, object>(this, x => null).Action(action);
+            return new FluentAction<TIn, object>(this, x => null).Action(action);
         }
     }
 }

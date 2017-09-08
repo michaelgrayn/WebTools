@@ -2,36 +2,36 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace FluentController
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using JetBrains.Annotations;
-    using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 
+namespace MvcTools
+{
     /// <summary>
     /// A builder for fluent controller actions.
     /// </summary>
-    /// <typeparam name="TViewModel">The type of the view model for the action.</typeparam>
-    /// <typeparam name="TModel">The type of the input for the success method.</typeparam>
-    public class FluentAction<TViewModel, TModel>
+    /// <typeparam name="TIn">The type of the client input to the action.</typeparam>
+    /// <typeparam name="TOut">The type of the input for the success method.</typeparam>
+    public class FluentAction<TIn, TOut> where TIn : IValidatable
     {
         /// <summary>
-        /// The action to perform that returns a model for the success result.
+        /// The main action to perform. Returns a model for the success method.
         /// </summary>
-        private readonly Func<TViewModel, Task<TModel>> _actionModel;
+        private readonly Func<TIn, Task<TOut>> _mainAction;
 
         /// <summary>
         /// The other tasks to run.
         /// </summary>
-        private readonly IList<Func<TViewModel, Task>> _taskList = new List<Func<TViewModel, Task>>();
+        private readonly IList<Func<TIn, Task>> _taskList = new List<Func<TIn, Task>>();
 
         /// <summary>
-        /// The parameter to pass to the action method.
+        /// The parameter to pass to the main action method.
         /// </summary>
-        private readonly FluentParameter<TViewModel> _viewModel;
+        private readonly FluentParameter<TIn> _parameter;
 
         /// <summary>
         /// What to do on action failure.
@@ -41,17 +41,17 @@ namespace FluentController
         /// <summary>
         /// What to do on action success.
         /// </summary>
-        private Func<TModel, IActionResult> _success;
+        private Func<TOut, IActionResult> _success;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentAction{TClient, TModel}" /> class.
         /// </summary>
-        /// <param name="viewModel">The view model.</param>
-        /// <param name="action">The action to perform, which returns the model.</param>
-        internal FluentAction(FluentParameter<TViewModel> viewModel, Func<TViewModel, Task<TModel>> action)
+        /// <param name="parameter">The view model.</param>
+        /// <param name="mainAction">The main action to perform.</param>
+        internal FluentAction(FluentParameter<TIn> parameter, Func<TIn, Task<TOut>> mainAction)
         {
-            _viewModel = viewModel;
-            _actionModel = action;
+            _parameter = parameter;
+            _mainAction = mainAction;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace FluentController
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TViewModel, TModel> Action([NotNull] Func<TViewModel, Task> action)
+        public FluentAction<TIn, TOut> Action([NotNull] Func<TIn, Task> action)
         {
             _taskList.Add(action);
             return this;
@@ -70,28 +70,28 @@ namespace FluentController
         /// </summary>
         /// <param name="error">What to do if the action fails.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TViewModel, TModel> Error(Func<Exception, IActionResult> error)
+        public FluentAction<TIn, TOut> Error(Func<Exception, IActionResult> error)
         {
             _error = error;
             return this;
         }
 
         /// <summary>
-        /// Performs the action(s) and returns a result. The action that returns the model will run before all other tasks.
+        /// Performs the action(s) and returns a result. The main action will run before all other tasks.
         /// </summary>
         /// <returns>The resulting response to the request.</returns>
         public async Task<IActionResult> ResponseAsync()
         {
             try
             {
-                if (!_viewModel.Valid) return ErrorInvoker();
+                if (!_parameter.Valid) return ErrorInvoker();
 
-                TModel model;
-                if (_actionModel == null) model = default(TModel);
-                else model = await _actionModel(_viewModel.ViewModel);
+                TOut model;
+                if (_mainAction == null) model = default(TOut);
+                else model = await _mainAction(_parameter.Parameter);
 
                 // The ToList() call is important for ensuring that the tasks run simultaneously.
-                var tasks = _taskList.Select(task => task(_viewModel.ViewModel)).ToList();
+                var tasks = _taskList.Select(task => task(_parameter.Parameter)).ToList();
                 foreach (var task in tasks) await task;
 
                 return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
@@ -107,7 +107,7 @@ namespace FluentController
         /// </summary>
         /// <param name="success">What to do if the action succeeds.</param>
         /// <returns>A fluent action.</returns>
-        public FluentAction<TViewModel, TModel> Success(Func<TModel, IActionResult> success)
+        public FluentAction<TIn, TOut> Success(Func<TOut, IActionResult> success)
         {
             _success = success;
             return this;

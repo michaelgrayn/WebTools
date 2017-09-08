@@ -2,17 +2,14 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace FluentController
+namespace MvcTools
 {
     /// <summary>
     /// Represents the input for a request that has no client input.
     /// </summary>
-    public class NoInput : IViewModel<NoInput>
+    public class NoInput : IValidatable
     {
         /// <inheritdoc />
-        public NoInput Value() => this;
-
-        /// <inheritdoc />
-        public bool Valid() => true;
+        public bool Validate() => true;
     }
 }

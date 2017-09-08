@@ -13,6 +13,9 @@
     <RepositoryUrl>https://github.com/mhdejonge/MVC-Tools</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <NeutralLanguage />
+    <PackageId>MvcTools</PackageId>
+    <AssemblyName>MvcTools</AssemblyName>
+    <RootNamespace>MvcTools</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
