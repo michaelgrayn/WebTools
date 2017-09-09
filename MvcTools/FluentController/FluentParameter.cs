@@ -2,12 +2,12 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-using System;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-
 namespace MvcTools
 {
+    using System;
+    using System.Threading.Tasks;
+    using JetBrains.Annotations;
+
     /// <summary>
     /// A builder for fluent controller actions.
     /// </summary>

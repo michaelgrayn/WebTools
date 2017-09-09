@@ -2,15 +2,15 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-using System;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
-using MvcTools.ResultTypes;
-
 namespace MvcTools
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc;
+    using ResultTypes;
+
     /// <summary>
     /// The base class for fluent controllers
     /// </summary>

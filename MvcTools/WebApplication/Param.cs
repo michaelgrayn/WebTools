@@ -14,6 +14,9 @@ namespace WebApplication
 
         public string Value { get; set; }
 
-        public bool Validate() => Index >= 0;
+        public bool Validate()
+        {
+            return Index >= 0;
+        }
     }
 }

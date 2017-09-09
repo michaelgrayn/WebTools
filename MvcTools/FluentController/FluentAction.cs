@@ -2,15 +2,15 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
-
 namespace MvcTools
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc;
+
     /// <summary>
     /// A builder for fluent controller actions.
     /// </summary>
@@ -24,14 +24,14 @@ namespace MvcTools
         private readonly Func<TIn, Task<TOut>> _mainAction;
 
         /// <summary>
-        /// The other tasks to run.
-        /// </summary>
-        private readonly IList<Func<TIn, Task>> _taskList = new List<Func<TIn, Task>>();
-
-        /// <summary>
         /// The parameter to pass to the main action method.
         /// </summary>
         private readonly FluentParameter<TIn> _parameter;
+
+        /// <summary>
+        /// The other tasks to run.
+        /// </summary>
+        private readonly IList<Func<TIn, Task>> _taskList = new List<Func<TIn, Task>>();
 
         /// <summary>
         /// What to do on action failure.

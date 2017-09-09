@@ -10,6 +10,9 @@ namespace MvcTools
     public class NoInput : IValidatable
     {
         /// <inheritdoc />
-        public bool Validate() => true;
+        public bool Validate()
+        {
+            return true;
+        }
     }
 }
