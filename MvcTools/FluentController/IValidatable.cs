@@ -1,4 +1,4 @@
-﻿// MvcTools.FluentController.IViewModel.cs
+﻿// MvcTools.FluentController.IValidatable.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
