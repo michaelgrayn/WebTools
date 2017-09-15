@@ -10,7 +10,7 @@ namespace MvcTools
     public interface IValidatable
     {
         /// <summary>
-        /// Is this view model valid?
+        /// Is this object valid?
         /// </summary>
         bool Validate();
     }

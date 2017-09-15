@@ -24,7 +24,6 @@ namespace MvcTools
         /// </summary>
         /// <param name="parameter">The client input.</param>
         /// <param name="modelState">Is the model state valid?</param>
-        /// <returns>A fluent action.</returns>
         internal FluentParameter([NotNull] TIn parameter, bool modelState)
         {
             Parameter = parameter;
