@@ -1,0 +1,12 @@
+﻿@model WebApplication.Param
+<!DOCTYPE HTML>
+<head>
+    <title>Test Form</title>
+</head>
+<body>
+    <form method="post" asp-action="Post" asp-controller="Values">
+        <input asp-for="Index" />
+        <input asp-for="Value" />
+        <input type="submit" value="Submit" />
+    </form>
+</body>

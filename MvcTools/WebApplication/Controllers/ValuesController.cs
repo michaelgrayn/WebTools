@@ -18,6 +18,13 @@ namespace WebApplication.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
+        [Route("/")]
+        public IActionResult Form()
+        {
+            return View(new Param());
+        }
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -51,14 +58,14 @@ namespace WebApplication.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Param param)
+        public async Task<IActionResult> Post(Param param)
         {
             return await CheckRequest(param).Action(_repository.Add).ResponseAsync();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, string value)
         {
             var p = new Param { Index = id, Value = value };
             return await CheckRequest(p).Action(_repository.Update).ResponseAsync();

@@ -58,7 +58,7 @@ namespace MvcTools
         /// <returns>A fluent action.</returns>
         public FluentAction<TIn, object> Action([NotNull] Func<TIn, Task> action)
         {
-            return new FluentAction<TIn, object>(this, x => null).Action(action);
+            return new FluentAction<TIn, object>(this, null).Action(action);
         }
     }
 }

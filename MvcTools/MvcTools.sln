@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcTools.ResultTypes", "MvcTools.ResultTypes\MvcTools.ResultTypes.csproj", "{759DF221-0081-4C16-84FD-55B358DC183C}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentController", "FluentC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplication\WebApplication.csproj", "{94786B4C-4DF6-4D37-8748-57B5B8C0F5AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcTools.Extensions", "MvcTools.Extensions\MvcTools.Extensions.csproj", "{63B2CD0B-1764-447D-B4BE-83091E19713A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcTools.Extensions", "MvcTools.Extensions\MvcTools.Extensions.csproj", "{63B2CD0B-1764-447D-B4BE-83091E19713A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
