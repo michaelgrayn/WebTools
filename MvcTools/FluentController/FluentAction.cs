@@ -16,7 +16,7 @@ namespace MvcTools
     /// </summary>
     /// <typeparam name="TIn">The type of the client input to the action.</typeparam>
     /// <typeparam name="TOut">The type of the input for the success method.</typeparam>
-    public class FluentAction<TIn, TOut> where TIn : IValidatable
+    public sealed class FluentAction<TIn, TOut> where TIn : IValidatable
     {
         /// <summary>
         /// The main action to perform. Returns a model for the success method.

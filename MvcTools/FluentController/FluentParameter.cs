@@ -12,7 +12,7 @@ namespace MvcTools
     /// A builder for fluent controller actions.
     /// </summary>
     /// <typeparam name="TIn">The type of the input to the main action method.</typeparam>
-    public class FluentParameter<TIn> where TIn : IValidatable
+    public sealed class FluentParameter<TIn> where TIn : IValidatable
     {
         /// <summary>
         /// The state of the model binding.

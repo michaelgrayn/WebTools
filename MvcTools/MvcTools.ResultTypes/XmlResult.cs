@@ -15,7 +15,7 @@ namespace MvcTools.ResultTypes
     /// <summary>
     /// Represents a class that is used to send XML-formatted content to the response.
     /// </summary>
-    public class XmlResult : ActionResult
+    public sealed class XmlResult : ActionResult
     {
         /// <summary>
         /// The object to be serialized to XML.
@@ -31,11 +31,11 @@ namespace MvcTools.ResultTypes
         /// Initializes a new instance of the <see cref="XmlResult" /> class.
         /// </summary>
         /// <param name="data">The object to serialize to XML.</param>
-        /// <param name="attributeOverrides"><see cref="XmlAttributeOverrides" /> to use during serialization.</param>
-        public XmlResult(object data, [CanBeNull] XmlAttributeOverrides attributeOverrides)
+        /// <param name="xmlSerializer"><see cref="XmlSerializer" /> to use.</param>
+        public XmlResult(object data, [CanBeNull] XmlSerializer xmlSerializer)
         {
             _data = data;
-            _xmlSerializer = new XmlSerializer(_data.GetType(), attributeOverrides);
+            _xmlSerializer = xmlSerializer ?? new XmlSerializer(_data.GetType());
         }
 
         /// <summary>

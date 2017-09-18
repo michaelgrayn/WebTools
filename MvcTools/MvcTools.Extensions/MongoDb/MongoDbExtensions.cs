@@ -2,7 +2,7 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Extensions
+namespace MvcTools.Extensions.MongoDb
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ namespace MvcTools.Extensions
         private static readonly UpdateOptions Upsert = new UpdateOptions { IsUpsert = true };
 
         /// <summary>
-        /// Adds DI for a MongoDb connection.
+        /// Adds transient DI for a MongoDb connection.
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="connection">MongoDb connection string.</param>
@@ -29,7 +29,7 @@ namespace MvcTools.Extensions
         }
 
         /// <summary>
-        /// Adds DI for a default MongoDb database.
+        /// Adds transient DI for a MongoDb connection and database.
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="connection">MongoDb connection string.</param>

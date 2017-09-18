@@ -2,7 +2,7 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Extensions
+namespace MvcTools.Extensions.MongoDb
 {
     using MongoDB.Bson;
 

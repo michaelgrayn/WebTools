@@ -30,14 +30,14 @@ namespace MvcTools
         /// Creates a <see cref="XmlResult" /> object that serializes the specified <paramref name="data" /> object to XML.
         /// </summary>
         /// <param name="data">The object to serialize.</param>
-        /// <param name="xmlAttributeOverrides">The <see cref="XmlAttributeOverrides" /> to be used.</param>
+        /// <param name="xmlSerializer"><see cref="XmlSerializer" /> to use.</param>
         /// <returns>
         /// The created <see cref="XmlResult" /> that serializes the specified <paramref name="data" /> to XML format for the response.
         /// </returns>
         [NonAction]
-        public XmlResult Xml(object data, XmlAttributeOverrides xmlAttributeOverrides = null)
+        public XmlResult Xml(object data, XmlSerializer xmlSerializer = null)
         {
-            return new XmlResult(data, xmlAttributeOverrides);
+            return new XmlResult(data, xmlSerializer);
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace MvcTools
         /// <param name="action">This action takes no parameters and returns a <typeparamref name="TOut" />.</param>
         /// <returns>A fluent action.</returns>
         [NonAction]
-        protected static FluentAction<NoInput, TOut> Action<TOut>([NotNull] Func<Task<TOut>> action)
+        protected static FluentAction<NoValidation, TOut> Action<TOut>([NotNull] Func<Task<TOut>> action)
         {
-            return new FluentAction<NoInput, TOut>(new FluentParameter<NoInput>(new NoInput(), true), async x => await action());
+            return new FluentAction<NoValidation, TOut>(new FluentParameter<NoValidation>(new NoValidation(), true), async x => await action());
         }
 
         /// <summary>
