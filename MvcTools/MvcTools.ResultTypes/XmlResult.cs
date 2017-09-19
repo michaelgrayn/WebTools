@@ -45,7 +45,6 @@ namespace MvcTools.ResultTypes
         public override void ExecuteResult(ActionContext context)
         {
             if (_data == null) return;
-            if (context?.HttpContext?.Response?.Body == null) return;
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/xml; charset=utf-8";
             using (var xmlWriter = new XmlTextWriter(context.HttpContext.Response.Body, Encoding.UTF8))

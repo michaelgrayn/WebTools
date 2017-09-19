@@ -25,7 +25,6 @@ namespace MvcTools.Tests
         {
             var parameter = new NoValidation();
             var response = await CheckRequest(parameter).Action(async s => await Task.FromResult(s)).Success(Xml).ResponseAsync();
-            await response.ExecuteResultAsync(new ActionContext());
             Assert.IsInstanceOfType(response, typeof(XmlResult));
         }
 
@@ -37,7 +36,6 @@ namespace MvcTools.Tests
                 .Action(async x => await Task.Delay(500))
                 .Action(async x => await Task.Delay(500))
                 .Error(Json).ResponseAsync();
-            await response.ExecuteResultAsync(new ActionContext());
             Assert.IsInstanceOfType(response, typeof(EmptyResult));
         }
 
