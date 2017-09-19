@@ -8,7 +8,6 @@ namespace MvcTools.ResultTypes
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
-    using JetBrains.Annotations;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +31,7 @@ namespace MvcTools.ResultTypes
         /// </summary>
         /// <param name="data">The object to serialize to XML.</param>
         /// <param name="xmlSerializer"><see cref="XmlSerializer" /> to use.</param>
-        public XmlResult(object data, [CanBeNull] XmlSerializer xmlSerializer)
+        public XmlResult(object data, XmlSerializer xmlSerializer = null)
         {
             _data = data;
             _xmlSerializer = xmlSerializer ?? new XmlSerializer(_data.GetType());
@@ -46,6 +45,7 @@ namespace MvcTools.ResultTypes
         public override void ExecuteResult(ActionContext context)
         {
             if (_data == null) return;
+            if (context?.HttpContext?.Response?.Body == null) return;
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/xml; charset=utf-8";
             using (var xmlWriter = new XmlTextWriter(context.HttpContext.Response.Body, Encoding.UTF8))

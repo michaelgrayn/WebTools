@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluentController\FluentController.csproj" />
+    <ProjectReference Include="..\MvcTools.Extensions\MvcTools.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

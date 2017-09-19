@@ -27,7 +27,20 @@ namespace MvcTools
         public static IActionResult DefaultSuccess { get; set; } = new EmptyResult();
 
         /// <summary>
-        /// Creates a <see cref="XmlResult" /> object that serializes the specified <paramref name="data" /> object to XML.
+        /// Creates an <see cref="XmlResult" /> object that serializes the specified <paramref name="data" /> object to XML.
+        /// </summary>
+        /// <param name="data">The object to serialize.</param>
+        /// <returns>
+        /// The created <see cref="XmlResult" /> that serializes the specified <paramref name="data" /> to XML format for the response.
+        /// </returns>
+        [NonAction]
+        public XmlResult Xml(object data)
+        {
+            return new XmlResult(data);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="XmlResult" /> object that serializes the specified <paramref name="data" /> object to XML.
         /// </summary>
         /// <param name="data">The object to serialize.</param>
         /// <param name="xmlSerializer"><see cref="XmlSerializer" /> to use.</param>
@@ -35,7 +48,7 @@ namespace MvcTools
         /// The created <see cref="XmlResult" /> that serializes the specified <paramref name="data" /> to XML format for the response.
         /// </returns>
         [NonAction]
-        public XmlResult Xml(object data, XmlSerializer xmlSerializer = null)
+        public XmlResult Xml(object data, XmlSerializer xmlSerializer)
         {
             return new XmlResult(data, xmlSerializer);
         }

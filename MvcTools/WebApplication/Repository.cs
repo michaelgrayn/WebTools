@@ -21,6 +21,7 @@ namespace WebApplication
         Task Update(Param p);
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Repository : IRepository
     {
         private static readonly IList<string> Values = new List<string> { "value0", "value1", "value2" };

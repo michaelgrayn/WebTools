@@ -1,4 +1,4 @@
-﻿// MvcTools.FluentController.NoInput.cs
+﻿// MvcTools.FluentController.NoValidation.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 

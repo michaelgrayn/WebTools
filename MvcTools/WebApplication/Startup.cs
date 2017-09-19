@@ -11,6 +11,7 @@ namespace WebApplication
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using MvcTools;
+    using MvcTools.Extensions.MongoDb;
 
     // ReSharper disable All
     public class Startup
@@ -43,6 +44,8 @@ namespace WebApplication
             // Add framework services.
             services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             services.AddTransient<IRepository, Repository>();
+            services.AddMongoClientIoC("localhost:27017");
+            services.AddMongoClientIoC("localhost:27017", "Test");
         }
     }
 }
