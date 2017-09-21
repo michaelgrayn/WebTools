@@ -1,4 +1,4 @@
-// MvcTools.MvcTools.ResultTypes.XmlResult.cs
+// MvcTools.XmlResult.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 

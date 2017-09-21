@@ -1,12 +1,12 @@
-﻿// MvcTools.MvcTools.Tests.MongoExtensionTests.cs
+﻿// MvcTools.Tests.MongoExtensionTests.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
 namespace MvcTools.Tests
 {
     using System.Threading.Tasks;
-    using Extensions.MongoDb;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using MongoDb;
     using MongoDB.Bson;
     using MongoDB.Driver;
 

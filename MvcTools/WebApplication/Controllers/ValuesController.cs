@@ -1,4 +1,4 @@
-﻿// MvcTools.WebApplication.ValuesController.cs
+﻿// WebApplication.ValuesController.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
@@ -6,7 +6,7 @@ namespace WebApplication.Controllers
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using MvcTools;
+    using MvcTools.FluentController;
 
     [Route("api/[controller]")]
     public class ValuesController : FluentControllerBase

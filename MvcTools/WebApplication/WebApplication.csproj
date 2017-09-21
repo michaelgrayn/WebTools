@@ -30,8 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FluentController\FluentController.csproj" />
-    <ProjectReference Include="..\MvcTools.Extensions\MvcTools.Extensions.csproj" />
+    <ProjectReference Include="..\MvcTools\MvcTools.csproj" />
   </ItemGroup>
 
 </Project>

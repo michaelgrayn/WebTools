@@ -1,10 +1,11 @@
-// MvcTools.MvcTools.Tests.FluentControllerTests.cs
+// MvcTools.Tests.FluentControllerTests.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
 namespace MvcTools.Tests
 {
     using System.Threading.Tasks;
+    using FluentController;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ResultTypes;

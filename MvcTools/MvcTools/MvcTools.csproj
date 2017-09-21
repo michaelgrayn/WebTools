@@ -2,21 +2,33 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Authors>Matthew DeJonge</Authors>
     <Company />
     <Product>MvcTools</Product>
-    <Description>Additional result types to return from controllers.</Description>
+    <Description>
+      Classes and extension methods for MVC projects.
+      Contains:
+        1) A fluent builder to help reduce the amount of code in your controllers.
+        2) New result types.
+        3) Extension methods for collections.
+        4) MongoDb document base class and extension methods.
+    </Description>
     <Copyright>Matthew DeJonge</Copyright>
 	<PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mhdejonge/MVC-Tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mhdejonge/MVC-Tools</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <NeutralLanguage />
+    <PackageId>MvcTools</PackageId>
+    <AssemblyName>MvcTools</AssemblyName>
+    <RootNamespace>MvcTools</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
   </ItemGroup>
 
 </Project>

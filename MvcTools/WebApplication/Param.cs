@@ -1,11 +1,11 @@
-﻿// MvcTools.WebApplication.Param.cs
+﻿// WebApplication.Param.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
 namespace WebApplication
 {
     using System.ComponentModel.DataAnnotations;
-    using MvcTools;
+    using MvcTools.FluentController;
 
     public class Param : IValidatable
     {

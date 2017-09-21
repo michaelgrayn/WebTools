@@ -1,8 +1,8 @@
-﻿// MvcTools.FluentController.FluentParameter.cs
+﻿// MvcTools.FluentParameter.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools
+namespace MvcTools.FluentController
 {
     using System;
     using System.Threading.Tasks;

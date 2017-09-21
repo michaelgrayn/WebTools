@@ -1,8 +1,8 @@
-﻿// MvcTools.FluentController.IValidatable.cs
+﻿// MvcTools.IValidatable.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools
+namespace MvcTools.FluentController
 {
     /// <summary>
     /// Provides a simple way to validate this object.

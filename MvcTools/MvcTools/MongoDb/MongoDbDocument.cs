@@ -1,8 +1,8 @@
-﻿// MvcTools.MvcTools.Extensions.MongoDbDocument.cs
+﻿// MvcTools.MongoDbDocument.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Extensions.MongoDb
+namespace MvcTools.MongoDb
 {
     using MongoDB.Bson;
 

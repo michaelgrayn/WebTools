@@ -1,8 +1,8 @@
-﻿// MvcTools.MvcTools.Extensions.MongoDbExtensions.cs
+﻿// MvcTools.MongoDbExtensions.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Extensions.MongoDb
+namespace MvcTools.MongoDb
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;

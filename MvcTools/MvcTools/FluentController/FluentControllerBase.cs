@@ -1,8 +1,8 @@
-﻿// MvcTools.FluentController.FluentControllerBase.cs
+﻿// MvcTools.FluentControllerBase.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools
+namespace MvcTools.FluentController
 {
     using System;
     using System.Threading.Tasks;

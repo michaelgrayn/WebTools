@@ -1,8 +1,8 @@
-﻿// MvcTools.MvcTools.Extensions.CollectionExtensions.cs
+﻿// MvcTools.Enumerable.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Extensions.Collections
+namespace MvcTools.CollectionExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace MvcTools.Extensions.Collections
     /// <summary>
     /// Extension methods for collections.
     /// </summary>
-    public static class CollectionExtensions
+    public static class Enumerable
     {
         /// <summary>
         /// Tries to determine whether a sequence contains no elements.
@@ -61,49 +61,6 @@ namespace MvcTools.Extensions.Collections
         public static bool None<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             return !source.Any(predicate);
-        }
-
-        /// <summary>
-        /// Removes the last element of an <see cref="IList{T}" />.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">The <see cref="IList{T}" />.</param>
-        /// <exception cref="NotSupportedException">The <see cref="IList{T}" /> is read-only.</exception>
-        public static void Remove<TSource>(this IList<TSource> source)
-        {
-            source.RemoveAt(source.Count - 1);
-        }
-
-        /// <summary>
-        /// Swaps the elements at the indicated indices.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">The <see cref="IList{T}" />.</param>
-        /// <param name="a">The first index.</param>
-        /// <param name="b">The second index.</param>
-        /// <exception cref="NotSupportedException">The <see cref="IList{T}" /> is read-only.</exception>
-        public static void Swap<TSource>(this IList<TSource> source, int a, int b)
-        {
-            var swap = source[a];
-            source[a] = source[b];
-            source[b] = swap;
-        }
-
-        /// <summary>
-        /// Removes the <see cref="IList{T}" /> item at the specified index by swapping
-        /// it with the last item then removing the it.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">The <see cref="IList{T}" />.</param>
-        /// <param name="index">The zero-based index of the item to remove.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="index" /> is not a valid index in the <see cref="IList{T}" />.
-        /// </exception>
-        /// <exception cref="NotSupportedException">The <see cref="IList{T}" /> is read-only.</exception>
-        public static void SwapRemove<TSource>(this IList<TSource> source, int index)
-        {
-            source.Swap(index, source.Count - 1);
-            source.Remove();
         }
     }
 }

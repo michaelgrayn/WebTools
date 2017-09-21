@@ -1,4 +1,4 @@
-﻿// MvcTools.WebApplication.Startup.cs
+﻿// WebApplication.Startup.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
@@ -10,8 +10,8 @@ namespace WebApplication
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using MvcTools;
-    using MvcTools.Extensions.MongoDb;
+    using MvcTools.FluentController;
+    using MvcTools.MongoDb;
 
     // ReSharper disable All
     public class Startup

@@ -1,8 +1,8 @@
-﻿// MvcTools.FluentController.NoValidation.cs
+﻿// MvcTools.NoValidation.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools
+namespace MvcTools.FluentController
 {
     /// <summary>
     /// Represents the input for a request that has no client input.

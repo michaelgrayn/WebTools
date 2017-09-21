@@ -1,4 +1,4 @@
-﻿// MvcTools.WebApplication.Program.cs
+﻿// WebApplication.Program.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 

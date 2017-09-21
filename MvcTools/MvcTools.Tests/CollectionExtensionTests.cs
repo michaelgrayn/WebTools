@@ -1,4 +1,4 @@
-// MvcTools.MvcTools.Tests.CollectionExtensionTests.cs
+// MvcTools.Tests.CollectionExtensionTests.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
@@ -6,7 +6,7 @@ namespace MvcTools.Tests
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Extensions.Collections;
+    using CollectionExtensions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
