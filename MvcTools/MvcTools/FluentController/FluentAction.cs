@@ -87,7 +87,7 @@ namespace MvcTools.FluentController
                 if (!_parameter.Valid) return ErrorInvoker();
 
                 TOut model;
-                if (_mainAction == null) model = default(TOut);
+                if (_mainAction == null) model = default;
                 else model = await _mainAction(_parameter.Parameter);
 
                 // The ToList() call is important for ensuring that the tasks run simultaneously.
