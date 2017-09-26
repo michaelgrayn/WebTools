@@ -9,7 +9,7 @@ namespace MvcTools.CollectionExtensions
     using System.Linq;
 
     /// <summary>
-    /// Extension methods for collections.
+    /// Extension methods for <see cref="IEnumerable{T}" />.
     /// </summary>
     public static class Enumerable
     {

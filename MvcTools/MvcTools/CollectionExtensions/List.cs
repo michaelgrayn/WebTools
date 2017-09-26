@@ -6,6 +6,9 @@ namespace MvcTools.CollectionExtensions
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Extensions for <see cref="IList{T}" />.
+    /// </summary>
     public static class List
     {
         /// <summary>

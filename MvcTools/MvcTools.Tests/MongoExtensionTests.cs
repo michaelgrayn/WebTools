@@ -44,7 +44,7 @@ namespace MvcTools.Tests
         public async Task TestSaveManyAndFindAllAsync()
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test1");
-            await collection.DeleteManyAsync(Builders<Document>.Filter.Empty);
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
             var documents = new List<Document> { new Document(), new Document() };
             await collection.SaveManyAsync(documents);
             var result = await collection.FindAllAsync();
@@ -59,6 +59,16 @@ namespace MvcTools.Tests
             await collection.SaveManyAsync(documents);
             var result = await collection.DeleteManyAsync(documents);
             Assert.AreEqual(result.DeletedCount, documents.Count);
+        }
+
+        [TestMethod]
+        public async Task TestMultiFilterAndCountAsync()
+        {
+            var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test3");
+            var documents = new List<Document> { new Document(), new Document() };
+            await collection.SaveManyAsync(documents);
+            await collection.DeleteManyAsync(MongoDbExtensions.CreateMultiIdFilter(documents));
+            Assert.AreEqual(await collection.CountAsync(), 0);
         }
     }
 }

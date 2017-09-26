@@ -12,7 +12,7 @@ namespace MvcTools.FluentController
     using ResultTypes;
 
     /// <summary>
-    /// The base class for fluent controllers
+    /// The base class for fluent controllers.
     /// </summary>
     public abstract class FluentControllerBase : Controller
     {
