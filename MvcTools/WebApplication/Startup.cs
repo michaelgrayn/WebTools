@@ -43,9 +43,7 @@ namespace WebApplication
         {
             // Add framework services.
             services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
-            services.AddTransient<IRepository, Repository>();
-            services.AddMongoClientIoC("localhost:27017");
-            services.AddMongoClientIoC("localhost:27017", "Test");
+            services.AddMongoClientIoC("localhost:27017").AddMongoClientIoC("localhost:27017", "Test").AddTransient<IRepository, Repository>();
         }
     }
 }

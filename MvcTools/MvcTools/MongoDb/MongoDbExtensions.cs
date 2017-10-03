@@ -26,9 +26,10 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="connection">MongoDb connection string.</param>
-        public static void AddMongoClientIoC(this IServiceCollection services, string connection)
+        /// <returns>The service collection after adding MongoDb DI.</returns>
+        public static IServiceCollection AddMongoClientIoC(this IServiceCollection services, string connection)
         {
-            services.AddTransient<IMongoClient>(x => new MongoClient(connection));
+            return services.AddTransient<IMongoClient>(x => new MongoClient(connection));
         }
 
         /// <summary>
@@ -37,9 +38,10 @@ namespace MvcTools.MongoDb
         /// <param name="services">The service collection.</param>
         /// <param name="connection">MongoDb connection string.</param>
         /// <param name="database">Database name.</param>
-        public static void AddMongoClientIoC(this IServiceCollection services, string connection, string database)
+        /// <returns>The service collection after adding MongoDb DI.</returns>
+        public static IServiceCollection AddMongoClientIoC(this IServiceCollection services, string connection, string database)
         {
-            services.AddTransient(x => new MongoClient(connection).GetDatabase(database));
+            return services.AddTransient(x => new MongoClient(connection).GetDatabase(database));
         }
 
         /// <summary>
