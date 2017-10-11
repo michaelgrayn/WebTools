@@ -5,6 +5,7 @@
 namespace MvcTools.Tests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using MongoDb;
@@ -69,6 +70,18 @@ namespace MvcTools.Tests
             await collection.SaveManyAsync(documents);
             await collection.DeleteManyAsync(MongoDbExtensions.CreateMultiIdFilter(documents));
             Assert.AreEqual(await collection.CountAsync(), 0);
+        }
+
+        [TestMethod]
+        public async Task TestFindByIdAsync()
+        {
+            var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test4");
+            var documents = new List<Document> { new Document(), new Document() };
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+            await collection.InsertManyAsync(documents);
+            var findById = await collection.FindByIdAsync(documents.Select(x => x.Id));
+            Assert.AreEqual(documents[0].Id, findById[0].Id);
+            Assert.AreEqual(documents[1].Id, findById[1].Id);
         }
     }
 }

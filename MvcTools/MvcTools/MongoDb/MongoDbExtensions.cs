@@ -22,6 +22,11 @@ namespace MvcTools.MongoDb
         private static readonly UpdateOptions Upsert = new UpdateOptions { IsUpsert = true };
 
         /// <summary>
+        /// The name of MongoDb's id field.
+        /// </summary>
+        public const string Id = "_id";
+
+        /// <summary>
         /// Adds transient DI for a MongoDb connection.
         /// </summary>
         /// <param name="services">The service collection.</param>
@@ -102,6 +107,18 @@ namespace MvcTools.MongoDb
         public static async Task<IList<TDocument>> FindAllAsync<TDocument>(this IMongoCollection<TDocument> collection)
         {
             return await collection.Find(FilterDefinition<TDocument>.Empty).ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets documents by _ids.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of the documents.</typeparam>
+        /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
+        /// <param name="ids">The _ids of the documents to find.</param>
+        /// <returns>Documents with an _id in <paramref name="ids" />.</returns>
+        public static async Task<IList<TDocument>> FindByIdAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<ObjectId> ids)
+        {
+            return await collection.Find(Builders<TDocument>.Filter.In(Id, ids)).ToListAsync();
         }
 
         /// <summary>
