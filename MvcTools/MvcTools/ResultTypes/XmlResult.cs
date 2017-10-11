@@ -14,7 +14,7 @@ namespace MvcTools.ResultTypes
     /// <summary>
     /// Represents a class that is used to send XML-formatted content to the response.
     /// </summary>
-    public sealed class XmlResult : ActionResult
+    public sealed class XmlResult : ContentResult
     {
         /// <summary>
         /// The object to be serialized to XML.
@@ -35,22 +35,7 @@ namespace MvcTools.ResultTypes
         {
             _data = data;
             _xmlSerializer = xmlSerializer ?? new XmlSerializer(_data.GetType());
-        }
-
-        /// <summary>
-        /// Serialises the object that was passed into the constructor to XML and writes the
-        /// corresponding XML to the result stream.
-        /// </summary>
-        /// <param name="context">The controller context for the current request.</param>
-        public override void ExecuteResult(ActionContext context)
-        {
-            if (_data == null) return;
-            context.HttpContext.Response.Clear();
-            context.HttpContext.Response.ContentType = "application/xml; charset=utf-8";
-            using (var xmlWriter = new XmlTextWriter(context.HttpContext.Response.Body, Encoding.UTF8))
-            {
-                _xmlSerializer.Serialize(xmlWriter, _data);
-            }
+            ContentType = "application/xml; charset=utf-8";
         }
 
         /// <summary>
@@ -61,7 +46,15 @@ namespace MvcTools.ResultTypes
         /// <returns>A task to await.</returns>
         public override async Task ExecuteResultAsync(ActionContext context)
         {
-            await Task.Run(() => ExecuteResult(context));
+            if (_data == null) return;
+            context.HttpContext.Response.Clear();
+            await Task.Run(() =>
+            {
+                using (var xmlWriter = new XmlTextWriter(context.HttpContext.Response.Body, Encoding.UTF8))
+                {
+                    _xmlSerializer.Serialize(xmlWriter, _data);
+                }
+            });
         }
     }
 }
