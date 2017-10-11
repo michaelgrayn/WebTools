@@ -63,9 +63,7 @@ namespace MvcTools.MongoDb
         /// <returns>A filter that finds all the documents by _id.</returns>
         public static FilterDefinition<TDocument> CreateMultiIdFilter<TDocument>(IEnumerable<TDocument> documents) where TDocument : MongoDbDocument
         {
-            var filter = Builders<TDocument>.Filter.Where(x => false);
-            filter = documents.AsParallel().Aggregate(filter, (current, document) => current | Builders<TDocument>.Filter.Eq(d => d.Id, document.Id));
-            return filter;
+            return Builders<TDocument>.Filter.In(document => document.Id, documents.Select(document => document.Id));
         }
 
         /// <summary>
@@ -119,7 +117,7 @@ namespace MvcTools.MongoDb
         }
 
         /// <summary>
-        /// Saves the documents by deleting all existing documents and then inserting them into the collection.
+        /// Saves the documents by doing a bulk upsert. If a document has the default value for it's Id field, then a new Id will be generated.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents.</typeparam>
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
@@ -129,7 +127,7 @@ namespace MvcTools.MongoDb
         {
             var models = documents.AsParallel().Select(document =>
             {
-                if(document.Id == default) document.Id = ObjectId.GenerateNewId();
+                if (document.Id == default) document.Id = ObjectId.GenerateNewId();
                 return new ReplaceOneModel<TDocument>(Builders<TDocument>.Filter.Eq(filter => filter.Id, document.Id), document) { IsUpsert = true };
             });
             await collection.BulkWriteAsync(models);

@@ -27,6 +27,17 @@ namespace MvcTools.FluentController
         public static IActionResult DefaultSuccess { get; set; } = new EmptyResult();
 
         /// <summary>
+        /// Creates a <see cref="JsonStringResult" /> object that writes the specified <paramref name="json" /> to the result stream.
+        /// </summary>
+        /// <param name="json">The JSON to write to the result stream.</param>
+        /// <returns>The created <see cref="JsonStringResult" /> that writes the specified <paramref name="json" /> to the result stream.</returns>
+        [NonAction]
+        public JsonStringResult JsonString(string json)
+        {
+            return new JsonStringResult(json);
+        }
+
+        /// <summary>
         /// Creates an <see cref="XmlResult" /> object that serializes the specified <paramref name="data" /> object to XML.
         /// </summary>
         /// <param name="data">The object to serialize.</param>

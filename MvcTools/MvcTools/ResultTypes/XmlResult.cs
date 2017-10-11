@@ -58,6 +58,7 @@ namespace MvcTools.ResultTypes
         /// corresponding XML to the result stream asynchronously.
         /// </summary>
         /// <param name="context">The controller context for the current request.</param>
+        /// <returns>A task to await.</returns>
         public override async Task ExecuteResultAsync(ActionContext context)
         {
             await Task.Run(() => ExecuteResult(context));
