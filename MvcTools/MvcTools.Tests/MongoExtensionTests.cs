@@ -4,6 +4,7 @@
 
 namespace MvcTools.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace MvcTools.Tests
     using MongoDB.Driver;
 
     // ReSharper disable All
-    public class Document : MongoDbDocument
+    public class Document : MongoDbDocument<Document>
     {
         public override ObjectId Id
         {
@@ -31,6 +32,8 @@ namespace MvcTools.Tests
         public async Task TestSaveAndDeleteAsync()
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test0");
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+
             var document = new Document();
             var save = await collection.SaveAsync(document);
             Assert.AreNotEqual(save.UpsertedId, default);
@@ -46,36 +49,45 @@ namespace MvcTools.Tests
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test1");
             await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
-            var documents = new List<Document> { new Document(), new Document() };
+
+            var random = new Random();
+            var documents = new List<Document> { new Document { Value = random.Next() }, new Document { Value = random.Next() } };
             await collection.SaveManyAsync(documents);
             var result = await collection.FindAllAsync();
             Assert.AreEqual(result.Count, documents.Count);
+            var first = await collection.FindByIdAsync(result.First().Id);
+            Assert.AreEqual(result.First().Value, first.Value);
         }
 
         [TestMethod]
-        public async Task TestSaveManyAndDeleteManyAsync()
+        public async Task TestSaveManyAsync()
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test2");
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+
             var documents = new List<Document> { new Document(), new Document() };
             await collection.SaveManyAsync(documents);
-            var result = await collection.DeleteManyAsync(documents);
-            Assert.AreEqual(result.DeletedCount, documents.Count);
+            Assert.AreEqual(documents.Count, (await collection.FindAllAsync()).Count);
         }
 
         [TestMethod]
-        public async Task TestMultiFilterAndCountAsync()
+        public async Task TestMultiFilterAsync()
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test3");
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+
             var documents = new List<Document> { new Document(), new Document() };
             await collection.SaveManyAsync(documents);
-            await collection.DeleteManyAsync(MongoDbExtensions.CreateMultiIdFilter(documents));
-            Assert.AreEqual(await collection.CountAsync(), 0);
+            await collection.DeleteManyAsync(MongoDbExtensions.CreateMultiIdFilter<Document>(documents.Select(x => x.Id)));
+            Assert.AreEqual(await collection.CountAsync(FilterDefinition<Document>.Empty), 0);
         }
 
         [TestMethod]
         public async Task TestFindByIdAsync()
         {
             var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>("Test4");
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+
             var documents = new List<Document> { new Document(), new Document() };
             await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
             await collection.InsertManyAsync(documents);

@@ -50,51 +50,14 @@ namespace MvcTools.MongoDb
         }
 
         /// <summary>
-        /// Counts the number of documents in the collection.
-        /// </summary>
-        /// <typeparam name="TDocument">The type of the documents.</typeparam>
-        /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
-        /// <returns>The number of documents in the collection.</returns>
-        public static async Task<long> CountAsync<TDocument>(this IMongoCollection<TDocument> collection)
-        {
-            return await collection.CountAsync(FilterDefinition<TDocument>.Empty);
-        }
-
-        /// <summary>
         /// Creates a filter that finds all the documents by _id.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents.</typeparam>
         /// <param name="documents">The documents to create a filter for.</param>
         /// <returns>A filter that finds all the documents by _id.</returns>
-        public static FilterDefinition<TDocument> CreateMultiIdFilter<TDocument>(IEnumerable<TDocument> documents) where TDocument : MongoDbDocument
+        public static FilterDefinition<TDocument> CreateMultiIdFilter<TDocument>(IEnumerable<ObjectId> documents)
         {
-            return Builders<TDocument>.Filter.In(document => document.Id, documents.Select(document => document.Id));
-        }
-
-        /// <summary>
-        /// Deletes the document, finding it by Id.
-        /// </summary>
-        /// <typeparam name="TDocument">The type of the document.</typeparam>
-        /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
-        /// <param name="document">The document to delete.</param>
-        /// <returns>The result of the delete operation.</returns>
-        public static async Task<DeleteResult> DeleteOneAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument
-        {
-            return await collection.DeleteOneAsync(existing => existing.Id == document.Id);
-        }
-
-        /// <summary>
-        /// Deletes multiple documents, finding them by Id.
-        /// </summary>
-        /// <typeparam name="TDocument">The type of the documents.</typeparam>
-        /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
-        /// <param name="documents">The documents to delete.</param>
-        /// <returns>The result of the delete operation.</returns>
-        public static async Task<DeleteResult> DeleteManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents)
-            where TDocument : MongoDbDocument
-        {
-            var filter = CreateMultiIdFilter(documents);
-            return await collection.DeleteManyAsync(filter);
+            return Builders<TDocument>.Filter.In(Id, documents);
         }
 
         /// <summary>
@@ -110,6 +73,19 @@ namespace MvcTools.MongoDb
         }
 
         /// <summary>
+        /// Gets a document by _id.
+        /// </summary>
+        /// <typeparam name="TDocument">The type of the document.</typeparam>
+        /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
+        /// <param name="id">The _id of the document to find.</param>
+        /// <returns>A document with the _id of <paramref name="id" />.</returns>
+        /// <exception cref="System.InvalidOperationException">The input sequence contains more than one element or the input sequence is empty.</exception>
+        public static async Task<TDocument> FindByIdAsync<TDocument>(this IMongoCollection<TDocument> collection, ObjectId id)
+        {
+            return await collection.Find(Builders<TDocument>.Filter.Eq(Id, id)).SingleAsync();
+        }
+
+        /// <summary>
         /// Gets documents by _ids.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents.</typeparam>
@@ -118,7 +94,7 @@ namespace MvcTools.MongoDb
         /// <returns>Documents with an _id in <paramref name="ids" />.</returns>
         public static async Task<IList<TDocument>> FindByIdAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<ObjectId> ids)
         {
-            return await collection.Find(Builders<TDocument>.Filter.In(Id, ids)).ToListAsync();
+            return await collection.Find(CreateMultiIdFilter<TDocument>(ids)).ToListAsync();
         }
 
         /// <summary>
@@ -128,9 +104,9 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="document">The document to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument
+        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument<TDocument>
         {
-            return await collection.ReplaceOneAsync(existing => existing.Id == document.Id, document, Upsert);
+            return await collection.ReplaceOneAsync(document, document, Upsert);
         }
 
         /// <summary>
@@ -140,12 +116,12 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="documents">The documents to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents) where TDocument : MongoDbDocument
+        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents) where TDocument : MongoDbDocument<TDocument>
         {
             var models = documents.AsParallel().Select(document =>
             {
                 if (document.Id == default) document.Id = ObjectId.GenerateNewId();
-                return new ReplaceOneModel<TDocument>(Builders<TDocument>.Filter.Eq(filter => filter.Id, document.Id), document) { IsUpsert = true };
+                return new ReplaceOneModel<TDocument>(document, document) { IsUpsert = true };
             });
             await collection.BulkWriteAsync(models);
         }

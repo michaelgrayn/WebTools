@@ -4,7 +4,6 @@
 
 namespace MvcTools.Tests
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,19 +12,13 @@ namespace MvcTools.Tests
     using MongoDB.Driver;
     using ResultTypes;
 
-    internal class CrudController : BasicCrudController
+    internal class CrudController : BasicCrudController<object>
     {
         /// <inheritdoc />
-        public CrudController(IMongoClient client) : base(client) { }
+        public CrudController(IMongoClient client) : base(client, null) { }
 
         /// <inheritdoc />
         public override async Task<IActionResult> GetDocumentsAsync(string database, string collection)
-        {
-            await Reset(database, collection);
-            return await base.GetDocumentsAsync(database, collection);
-        }
-
-        public override async Task<IActionResult> GetDocumentsAsync(string database, string collection, IEnumerable<ObjectId> ids)
         {
             await Reset(database, collection);
             return await base.GetDocumentsAsync(database, collection);
@@ -43,7 +36,7 @@ namespace MvcTools.Tests
             return await base.PutDocumentAsync(database, collection, document);
         }
 
-        public override async Task<IActionResult> DeleteDocumentAsync(string database, string collection, [FromBody] object document)
+        public override async Task<IActionResult> DeleteDocumentAsync(string database, string collection, ObjectId document)
         {
             await Reset(database, collection);
             return await base.DeleteDocumentAsync(database, collection, document);
@@ -51,7 +44,7 @@ namespace MvcTools.Tests
 
         private async Task Reset(string database, string collection)
         {
-            await GetCollection(database, collection).DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
+            await GetCollection(database, collection).DeleteManyAsync(FilterDefinition<object>.Empty);
             await GetCollection(database, collection).InsertManyAsync(new[] { new BsonDocument("_id", new ObjectId()), new BsonDocument("_id", new ObjectId()), new BsonDocument("_id", new ObjectId()) });
         }
     }
@@ -64,17 +57,6 @@ namespace MvcTools.Tests
         {
             var controller = new CrudController(new MongoClient());
             var documents = await controller.GetDocumentsAsync("Test", "CrudController");
-            Assert.IsInstanceOfType(documents, typeof(JsonStringResult));
-        }
-
-        public async Task TestGetDocumentsByIdAsync()
-        {
-            var controller = new CrudController(new MongoClient());
-            var documents = await controller.GetDocumentsAsync("Test", "CrudController", new List<ObjectId>());
-            Assert.IsInstanceOfType(documents, typeof(JsonStringResult));
-            var document = new BsonDocument("_id", ObjectId.GenerateNewId());
-            await controller.PostDocumentAsync("Test", "CrudController", document);
-            documents = await controller.GetDocumentsAsync("Test", "CrudController", new List<ObjectId> { document["_id"].AsObjectId });
             Assert.IsInstanceOfType(documents, typeof(JsonStringResult));
         }
     }

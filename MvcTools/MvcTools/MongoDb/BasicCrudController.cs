@@ -4,7 +4,6 @@
 
 namespace MvcTools.MongoDb
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using FluentController;
     using Microsoft.AspNetCore.Mvc;
@@ -15,8 +14,9 @@ namespace MvcTools.MongoDb
     /// <summary>
     /// A controller for basic crud operations.
     /// </summary>
-    [Route("api/{database}/{collection}")]
-    public class BasicCrudController : FluentControllerBase
+    /// <typeparam name="TDocument">The type of the documents in the collection.</typeparam>
+    [NonController]
+    public abstract class BasicCrudController<TDocument> : FluentControllerBase
     {
         /// <summary>
         /// The MongoDb client.
@@ -24,17 +24,24 @@ namespace MvcTools.MongoDb
         private readonly IMongoClient _client;
 
         /// <summary>
+        /// Provides authentication and filtering for a crud controller.
+        /// </summary>
+        private readonly ICrudAuthenticator<TDocument> _authenticator;
+
+        /// <summary>
         /// Settings to correctly convert a <see cref="BsonDocument" /> to JSON.
         /// </summary>
         private readonly JsonWriterSettings _jsonWriterSettings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasicCrudController" /> class.
+        /// Initializes a new instance of the <see cref="BasicCrudController{TDocument}" /> class.
         /// </summary>
         /// <param name="client">MongoDb client.</param>
-        public BasicCrudController(IMongoClient client)
+        /// <param name="authenticator">Provides authentication and filtering for a crud controller.</param>
+        protected BasicCrudController(IMongoClient client, ICrudAuthenticator<TDocument> authenticator)
         {
             _client = client;
+            _authenticator = authenticator;
             _jsonWriterSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
         }
 
@@ -44,24 +51,13 @@ namespace MvcTools.MongoDb
         /// <param name="database">Database name.</param>
         /// <param name="collection">Collection name.</param>
         /// <returns>All documents in <paramref name="database" />.<paramref name="collection" />.</returns>
-        [HttpGet]
         public virtual async Task<IActionResult> GetDocumentsAsync(string database, string collection)
         {
-            var documents = await GetCollection(database, collection).FindAllAsync();
-            return JsonString(documents.ToJson(_jsonWriterSettings));
-        }
-
-        /// <summary>
-        /// Gets documents by _id from <paramref name="database" />.<paramref name="collection" />.
-        /// </summary>
-        /// <param name="database">Database name.</param>
-        /// <param name="collection">Collection name.</param>
-        /// <param name="ids">The _id's of the documents to get.</param>
-        /// <returns>All documents in <paramref name="database" />.<paramref name="collection" /> with _id's in <paramref name="ids" />.</returns>
-        [HttpGet]
-        public virtual async Task<IActionResult> GetDocumentsAsync(string database, string collection, [FromBody] IEnumerable<ObjectId> ids)
-        {
-            var documents = await GetCollection(database, collection).FindByIdAsync(ids);
+            var get = _authenticator.Get();
+            var sort = Builders<TDocument>.Sort.Ascending(MongoDbExtensions.Id);
+            var find = GetCollection(database, collection).Find(get.filter);
+            if (get.pageNumber > -1 && get.pageSize > -1) find = find.Sort(sort).Skip(get.pageNumber * get.pageSize).Limit(get.pageSize);
+            var documents = await find.ToListAsync();
             return JsonString(documents.ToJson(_jsonWriterSettings));
         }
 
@@ -72,10 +68,10 @@ namespace MvcTools.MongoDb
         /// <param name="collection">Collection name.</param>
         /// <param name="document">The document to insert.</param>
         /// <returns>The document after insert.</returns>
-        [HttpPost]
-        public virtual async Task<IActionResult> PostDocumentAsync(string database, string collection, [FromBody] object document)
+        public virtual async Task<IActionResult> PostDocumentAsync(string database, string collection, [FromBody] TDocument document)
         {
-            await GetCollection(database, collection).InsertOneAsync(document.ToBsonDocument());
+            if (!_authenticator.CanPost(document)) return BadRequest();
+            await GetCollection(database, collection).InsertOneAsync(document);
             return JsonString(document.ToJson(_jsonWriterSettings));
         }
 
@@ -86,11 +82,23 @@ namespace MvcTools.MongoDb
         /// <param name="collection">Collection name.</param>
         /// <param name="document">The document to update. Must have an id.</param>
         /// <returns>The replace result.</returns>
-        [HttpPut]
-        public virtual async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] object document)
+        public virtual async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] TDocument document)
         {
+            bool TryIdFilter(BsonDocument d, out FilterDefinition<TDocument> f)
+            {
+                if (d.TryGetValue(MongoDbExtensions.Id, out var oid) && oid.IsObjectId ||
+                    d.TryGetValue(nameof(MongoDbDocument<BsonDocument>.Id), out oid) && oid.IsObjectId)
+                {
+                    f = Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, oid.AsObjectId);
+                    return true;
+                }
+                f = FilterDefinition<TDocument>.Empty;
+                return false;
+            }
+
             var bsonDocument = document.ToBsonDocument();
-            if (TryIdFilter(bsonDocument, out var filter)) return Json(await GetCollection(database, collection).ReplaceOneAsync(filter, bsonDocument));
+            if (_authenticator.CanPut(document) && TryIdFilter(bsonDocument, out var filter))
+                return Json(await GetCollection(database, collection).ReplaceOneAsync(filter, document));
             return BadRequest();
         }
 
@@ -101,11 +109,10 @@ namespace MvcTools.MongoDb
         /// <param name="collection">Collection name.</param>
         /// <param name="document">The document to delete. Must have an id.</param>
         /// <returns>The delete result.</returns>
-        [HttpDelete]
-        public virtual async Task<IActionResult> DeleteDocumentAsync(string database, string collection, [FromBody] object document)
+        public virtual async Task<IActionResult> DeleteDocumentAsync(string database, string collection, ObjectId document)
         {
-            var bsonDocument = document.ToBsonDocument();
-            if (TryIdFilter(bsonDocument, out var filter)) return Json(await GetCollection(database, collection).DeleteOneAsync(filter));
+            var filter = Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, document);
+            if (_authenticator.CanDelete(document)) return Json(await GetCollection(database, collection).DeleteOneAsync(filter));
             return BadRequest();
         }
 
@@ -115,30 +122,9 @@ namespace MvcTools.MongoDb
         /// <param name="database">Database name.</param>
         /// <param name="collection">Collection name.</param>
         /// <returns>The MongoDb collection.</returns>
-        [NonAction]
-        protected IMongoCollection<BsonDocument> GetCollection(string database, string collection)
+        protected IMongoCollection<TDocument> GetCollection(string database, string collection)
         {
-            return _client.GetDatabase(database).GetCollection<BsonDocument>(collection);
-        }
-
-        /// <summary>
-        /// Tries to get an ObjectId with the name of _id or Id and create an equality filter.
-        /// Otherwise, creates an empty filter.
-        /// </summary>
-        /// <param name="document">The docuemnt.</param>
-        /// <param name="filter">The created _id filter.</param>
-        /// <returns>true if an equality filter could be made; otherwise, false</returns>
-        [NonAction]
-        private bool TryIdFilter(BsonDocument document, out FilterDefinition<BsonDocument> filter)
-        {
-            if (document.TryGetValue(MongoDbExtensions.Id, out var oid) && oid.IsObjectId ||
-                document.TryGetValue(nameof(MongoDbDocument.Id), out oid) && oid.IsObjectId)
-            {
-                filter = Builders<BsonDocument>.Filter.Eq(MongoDbExtensions.Id, oid.AsObjectId);
-                return true;
-            }
-            filter = FilterDefinition<BsonDocument>.Empty;
-            return false;
+            return _client.GetDatabase(database).GetCollection<TDocument>(collection);
         }
     }
 }
