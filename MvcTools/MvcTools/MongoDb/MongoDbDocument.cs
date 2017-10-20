@@ -10,8 +10,8 @@ namespace MvcTools.MongoDb
     /// <summary>
     /// Represents a MongoDb document.
     /// </summary>
-    /// <typeparam name="T">The runtime type of the document.</typeparam>
-    public abstract class MongoDbDocument<T>
+    /// <typeparam name="TDocument">The runtime type of the document.</typeparam>
+    public abstract class MongoDbDocument<TDocument>
     {
         /// <summary>
         /// The _id of this document.
@@ -22,9 +22,9 @@ namespace MvcTools.MongoDb
         /// Implicit conversion to use the document as a filter.
         /// </summary>
         /// <param name="document">The document.</param>
-        public static implicit operator FilterDefinition<T>(MongoDbDocument<T> document)
+        public static implicit operator FilterDefinition<TDocument>(MongoDbDocument<TDocument> document)
         {
-            return Builders<T>.Filter.Eq(MongoDbExtensions.Id, document.Id);
+            return Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, document.Id);
         }
     }
 }

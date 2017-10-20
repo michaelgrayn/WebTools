@@ -80,14 +80,19 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="database">Database name.</param>
         /// <param name="collection">Collection name.</param>
-        /// <param name="document">The document to update. Must have an id.</param>
+        /// <param name="document">The document to update. Must have an id property.</param>
         /// <returns>The replace result.</returns>
         public virtual async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] TDocument document)
         {
-            bool TryIdFilter(BsonDocument d, out FilterDefinition<TDocument> f)
+            bool TryIdFilter(TDocument d, out FilterDefinition<TDocument> f)
             {
-                if (d.TryGetValue(MongoDbExtensions.Id, out var oid) && oid.IsObjectId ||
-                    d.TryGetValue(nameof(MongoDbDocument<BsonDocument>.Id), out oid) && oid.IsObjectId)
+                if (d is MongoDbDocument<TDocument> documentFilter)
+                {
+                    f = documentFilter;
+                    return true;
+                }
+                var bson = document.ToBsonDocument();
+                if (bson.TryGetValue(MongoDbExtensions.Id, out var oid))
                 {
                     f = Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, oid.AsObjectId);
                     return true;
@@ -96,8 +101,7 @@ namespace MvcTools.MongoDb
                 return false;
             }
 
-            var bsonDocument = document.ToBsonDocument();
-            if (_authenticator.CanPut(document) && TryIdFilter(bsonDocument, out var filter))
+            if (_authenticator.CanPut(document) && TryIdFilter(document, out var filter))
                 return Json(await GetCollection(database, collection).ReplaceOneAsync(filter, document));
             return BadRequest();
         }

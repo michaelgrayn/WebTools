@@ -10,22 +10,22 @@ namespace MvcTools.MongoDb
     /// <summary>
     /// Returns all documents for Get requests and allows all Post, Put, and Delete requests.
     /// </summary>
-    internal class DefaultCrudAuthenticator : ICrudAuthenticator<BsonDocument>
+    public class DefaultCrudAuthenticator : ICrudAuthenticator<object>
     {
         /// <inheritdoc />
-        public (FilterDefinition<BsonDocument> filter, int pageNumber, int pageSize) Get()
+        public (FilterDefinition<object> filter, int pageNumber, int pageSize) Get()
         {
-            return FilterDefinition<BsonDocument>.Empty.All();
+            return FilterDefinition<object>.Empty.All();
         }
 
         /// <inheritdoc />
-        public bool CanPost(BsonDocument document)
+        public bool CanPost(object document)
         {
             return true;
         }
 
         /// <inheritdoc />
-        public bool CanPut(BsonDocument document)
+        public bool CanPut(object document)
         {
             return true;
         }
