@@ -24,9 +24,9 @@ namespace MvcTools.MongoDb
         private readonly IMongoClient _client;
 
         /// <summary>
-        /// Provides authentication and filtering for a crud controller.
+        /// Provides filtering for a crud controller GET.
         /// </summary>
-        private readonly ICrudAuthenticator<TDocument> _authenticator;
+        private readonly ICrudControllerFilter<TDocument> _filter;
 
         /// <summary>
         /// Settings to correctly convert a <see cref="BsonDocument" /> to JSON.
@@ -37,11 +37,11 @@ namespace MvcTools.MongoDb
         /// Initializes a new instance of the <see cref="BasicCrudController{TDocument}" /> class.
         /// </summary>
         /// <param name="client">MongoDb client.</param>
-        /// <param name="authenticator">Provides authentication and filtering for a crud controller.</param>
-        protected BasicCrudController(IMongoClient client, ICrudAuthenticator<TDocument> authenticator)
+        /// <param name="filter">Provides filtering for a crud controller GET.</param>
+        protected BasicCrudController(IMongoClient client, ICrudControllerFilter<TDocument> filter)
         {
             _client = client;
-            _authenticator = authenticator;
+            _filter = filter;
             _jsonWriterSettings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
         }
 
@@ -53,7 +53,7 @@ namespace MvcTools.MongoDb
         /// <returns>All documents in <paramref name="database" />.<paramref name="collection" />.</returns>
         public virtual async Task<IActionResult> GetDocumentsAsync(string database, string collection)
         {
-            var get = _authenticator.Get();
+            var get = _filter.Filter();
             var sort = Builders<TDocument>.Sort.Ascending(MongoDbExtensions.Id);
             var find = GetCollection(database, collection).Find(get.filter);
             if (get.pageNumber > -1 && get.pageSize > -1) find = find.Sort(sort).Skip(get.pageNumber * get.pageSize).Limit(get.pageSize);
@@ -70,7 +70,6 @@ namespace MvcTools.MongoDb
         /// <returns>The document after insert.</returns>
         public virtual async Task<IActionResult> PostDocumentAsync(string database, string collection, [FromBody] TDocument document)
         {
-            if (!_authenticator.CanPost(document)) return BadRequest();
             await GetCollection(database, collection).InsertOneAsync(document);
             return JsonString(document.ToJson(_jsonWriterSettings));
         }
@@ -101,9 +100,8 @@ namespace MvcTools.MongoDb
                 return false;
             }
 
-            if (_authenticator.CanPut(document) && TryIdFilter(document, out var filter))
-                return Json(await GetCollection(database, collection).ReplaceOneAsync(filter, document));
-            return BadRequest();
+            if (!TryIdFilter(document, out var filter)) return BadRequest();
+            return Json(await GetCollection(database, collection).ReplaceOneAsync(filter, document));
         }
 
         /// <summary>
@@ -116,8 +114,7 @@ namespace MvcTools.MongoDb
         public virtual async Task<IActionResult> DeleteDocumentAsync(string database, string collection, ObjectId document)
         {
             var filter = Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, document);
-            if (_authenticator.CanDelete(document)) return Json(await GetCollection(database, collection).DeleteOneAsync(filter));
-            return BadRequest();
+            return Json(await GetCollection(database, collection).DeleteOneAsync(filter));
         }
 
         /// <summary>

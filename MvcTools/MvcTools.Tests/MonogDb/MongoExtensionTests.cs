@@ -15,13 +15,6 @@ namespace MvcTools.Tests.MonogDb
     [TestClass]
     public class MongoExtensionTests
     {
-        private static async Task<IMongoCollection<Document>> GetCollection(uint testNumber)
-        {
-            var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>($"Test{testNumber}");
-            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
-            return collection;
-        }
-
         [TestMethod]
         public async Task TestSaveAndDeleteAsync()
         {
@@ -78,6 +71,13 @@ namespace MvcTools.Tests.MonogDb
             var findById = await collection.FindByIdAsync(documents.Select(x => x.Id));
             Assert.AreEqual(documents[0].Id, findById[0].Id);
             Assert.AreEqual(documents[1].Id, findById[1].Id);
+        }
+
+        private static async Task<IMongoCollection<Document>> GetCollection(uint testNumber)
+        {
+            var collection = new MongoClient().GetDatabase("Test").GetCollection<Document>($"Test{testNumber}");
+            await collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+            return collection;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MvcTools.Tests.MonogDb
 
     internal class DefaultCrudController : BasicCrudController<object>
     {
-        public DefaultCrudController(IMongoClient client) : base(client, new DefaultCrudAuthenticator()) { }
+        public DefaultCrudController(IMongoClient client) : base(client, new DefaultCrudControllerFilter()) { }
 
         public override async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] object document)
         {

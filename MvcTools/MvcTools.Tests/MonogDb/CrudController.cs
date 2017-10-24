@@ -10,32 +10,17 @@ namespace MvcTools.Tests.MonogDb
     using MongoDB.Bson;
     using MongoDB.Driver;
 
-    internal class CrudAuth : ICrudAuthenticator<Document>
+    internal class CrudControllerFilter : ICrudControllerFilter<Document>
     {
-        public (FilterDefinition<Document> filter, int pageNumber, int pageSize) Get()
+        public (FilterDefinition<Document> filter, int pageNumber, int pageSize) Filter()
         {
             return FilterDefinition<Document>.Empty.All();
-        }
-
-        public bool CanPost(Document document)
-        {
-            return document.Id != ObjectId.Empty;
-        }
-
-        public bool CanPut(Document document)
-        {
-            return document.Id != ObjectId.Empty;
-        }
-
-        public bool CanDelete(ObjectId document)
-        {
-            return document != ObjectId.Empty;
         }
     }
 
     internal class CrudController : BasicCrudController<Document>
     {
-        public CrudController(IMongoClient client) : base(client, new CrudAuth()) { }
+        public CrudController(IMongoClient client) : base(client, new CrudControllerFilter()) { }
 
         public override async Task<IActionResult> GetDocumentsAsync(string database, string collection)
         {
@@ -45,21 +30,22 @@ namespace MvcTools.Tests.MonogDb
 
         public override async Task<IActionResult> PostDocumentAsync(string database, string collection, [FromBody] Document document)
         {
+            if (document.Id == ObjectId.Empty) return BadRequest();
             await Reset(database, collection);
             return await base.PostDocumentAsync(database, collection, document);
         }
 
         public override async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] Document document)
         {
-            GetCollection(database, collection).DeleteMany(Builders<Document>.Filter.Eq(MongoDbExtensions.Id, document.Id));
-            var id = document.Id;
+            if (document.Id == ObjectId.Empty) return BadRequest();
+            await Reset(database, collection);
             GetCollection(database, collection).InsertOne(document);
-            document.Id = id;
             return await base.PutDocumentAsync(database, collection, document);
         }
 
         public override async Task<IActionResult> DeleteDocumentAsync(string database, string collection, ObjectId document)
         {
+            if (document == ObjectId.Empty) return BadRequest();
             await Reset(database, collection);
             return await base.DeleteDocumentAsync(database, collection, document);
         }

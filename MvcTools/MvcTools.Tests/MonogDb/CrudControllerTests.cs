@@ -39,8 +39,7 @@ namespace MvcTools.Tests.MonogDb
         public async Task TestPutDocumentAsync()
         {
             var controller = new CrudController(new MongoClient());
-            var document = new Document { Id = ObjectId.GenerateNewId() };
-            var result = await controller.PutDocumentAsync(Database, Collection, document);
+            var result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.GenerateNewId() });
             Assert.IsInstanceOfType(result, typeof(JsonResult));
             result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.Empty });
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
@@ -50,10 +49,7 @@ namespace MvcTools.Tests.MonogDb
         public async Task TestDefaultPutDocumentAsync()
         {
             var controller = new DefaultCrudController(new MongoClient());
-            var document = new Document { Id = ObjectId.GenerateNewId() };
-            var result = await controller.PutDocumentAsync(Database, Collection, document);
-            Assert.IsInstanceOfType(result, typeof(JsonResult));
-            result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.Empty });
+            var result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.GenerateNewId() });
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
 
