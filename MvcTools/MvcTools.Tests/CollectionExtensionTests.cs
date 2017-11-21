@@ -15,28 +15,52 @@ namespace MvcTools.Tests
         [TestMethod]
         public void TestIsEmptyAndIsNotEmpty()
         {
-            List<int> list = null;
-            Assert.IsTrue(list.IsEmpty());
-            Assert.IsFalse(list.IsNotEmpty());
-            list = new List<int>();
-            Assert.IsTrue(list.IsEmpty());
-            Assert.IsFalse(list.IsNotEmpty());
-            list.Add(0);
-            Assert.IsFalse(list.IsEmpty());
-            Assert.IsTrue(list.IsNotEmpty());
+            List<int> enumerable = null;
+            Assert.IsTrue(enumerable.IsEmpty());
+            Assert.IsFalse(enumerable.IsNotEmpty());
+            enumerable = new List<int>();
+            Assert.IsTrue(enumerable.IsEmpty());
+            Assert.IsFalse(enumerable.IsNotEmpty());
+            enumerable.Add(0);
+            Assert.IsFalse(enumerable.IsEmpty());
+            Assert.IsTrue(enumerable.IsNotEmpty());
         }
 
         [TestMethod]
         public void TestNone()
         {
-            var list = new List<int>();
-            Assert.IsTrue(list.None());
-            list.Add(0);
-            list.Add(1);
-            list.Add(2);
-            Assert.IsFalse(list.None());
-            Assert.IsTrue(list.None(x => x < 0));
-            Assert.IsFalse(list.None(x => x < 1));
+            var enumerable = new List<int>();
+            Assert.IsTrue(enumerable.None());
+            enumerable.Add(0);
+            enumerable.Add(1);
+            enumerable.Add(2);
+            Assert.IsFalse(enumerable.None());
+            Assert.IsTrue(enumerable.None(x => x < 0));
+            Assert.IsFalse(enumerable.None(x => x < 1));
+        }
+
+        [TestMethod]
+        public void TestToIList()
+        {
+            var enumerable = new[] { 0, 1, 2 };
+            var list = enumerable.ToIList();
+            Assert.IsInstanceOfType(list, typeof(IList<int>));
+        }
+
+        [TestMethod]
+        public void TestAddMany()
+        {
+            var collection = new List<int> { 0, 1, 2 };
+            collection.AddMany(new[] { 3, 4 });
+            Assert.AreEqual(5, collection.Count);
+        }
+
+        [TestMethod]
+        public void TestRemoveMany()
+        {
+            var collection = new List<int> { 0, 1, 2 };
+            collection.RemoveMany(new[] { 1, 2 });
+            Assert.AreEqual(1, collection.Count);
         }
 
         [TestMethod]

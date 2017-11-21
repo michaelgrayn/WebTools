@@ -8,6 +8,7 @@ namespace MvcTools.Tests.MonogDb
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using MongoDb;
     using MongoDB.Driver;
@@ -15,6 +16,13 @@ namespace MvcTools.Tests.MonogDb
     [TestClass]
     public class MongoExtensionTests
     {
+        [TestMethod]
+        public void TestAddMongoDbIoc()
+        {
+            var services = new ServiceCollection();
+            services.AddMongoClientIoC("mongodb://localhost").Clear();
+        }
+
         [TestMethod]
         public async Task TestSaveAndDeleteAsync()
         {

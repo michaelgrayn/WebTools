@@ -10,50 +10,47 @@ namespace MvcTools.Tests.MonogDb
     using MongoDB.Bson;
     using MongoDB.Driver;
 
-    internal class CrudControllerFilter : ICrudControllerFilter<Document>
+    internal class InternalController : CrudControllerBase<Document>
     {
-        public (FilterDefinition<Document> filter, int pageNumber, int pageSize) Filter()
-        {
-            return FilterDefinition<Document>.Empty.All();
-        }
-    }
+        private readonly IMongoCollection<Document> _collection;
 
-    internal class CrudController : BasicCrudController<Document>
-    {
-        public CrudController(IMongoClient client) : base(client, new CrudControllerFilter()) { }
-
-        public override async Task<IActionResult> GetDocumentsAsync(string database, string collection)
+        public InternalController(IMongoClient client, string database, string collection) : base(client, database, collection)
         {
-            await Reset(database, collection);
-            return await base.GetDocumentsAsync(database, collection);
+            _collection = client.GetDatabase(database).GetCollection<Document>(collection);
         }
 
-        public override async Task<IActionResult> PostDocumentAsync(string database, string collection, [FromBody] Document document)
+        public override async Task<IActionResult> GetDocumentsAsync(CrudControllerFilter<Document> document = null)
+        {
+            await Reset();
+            return await base.GetDocumentsAsync(document);
+        }
+
+        public override async Task<IActionResult> PostDocumentAsync([FromBody] Document document)
         {
             if (document.Id == ObjectId.Empty) return BadRequest();
-            await Reset(database, collection);
-            return await base.PostDocumentAsync(database, collection, document);
+            await Reset();
+            return await base.PostDocumentAsync(document);
         }
 
-        public override async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] Document document)
+        public override async Task<IActionResult> PutDocumentAsync([FromBody] Document document)
         {
             if (document.Id == ObjectId.Empty) return BadRequest();
-            await Reset(database, collection);
-            GetCollection(database, collection).InsertOne(document);
-            return await base.PutDocumentAsync(database, collection, document);
+            await Reset();
+            _collection.InsertOne(document);
+            return await base.PutDocumentAsync(document);
         }
 
-        public override async Task<IActionResult> DeleteDocumentAsync(string database, string collection, ObjectId document)
+        public override async Task<IActionResult> DeleteDocumentAsync(ObjectId document)
         {
             if (document == ObjectId.Empty) return BadRequest();
-            await Reset(database, collection);
-            return await base.DeleteDocumentAsync(database, collection, document);
+            await Reset();
+            return await base.DeleteDocumentAsync(document);
         }
 
-        private async Task Reset(string database, string collection)
+        private async Task Reset()
         {
-            await GetCollection(database, collection).DeleteManyAsync(FilterDefinition<Document>.Empty);
-            await GetCollection(database, collection).InsertManyAsync(new[] { new Document(), new Document(), new Document() });
+            await _collection.DeleteManyAsync(FilterDefinition<Document>.Empty);
+            await _collection.InsertManyAsync(new[] { new Document(), new Document(), new Document() });
         }
     }
 }

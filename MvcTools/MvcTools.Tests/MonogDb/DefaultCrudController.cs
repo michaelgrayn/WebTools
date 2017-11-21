@@ -9,15 +9,20 @@ namespace MvcTools.Tests.MonogDb
     using MongoDb;
     using MongoDB.Driver;
 
-    internal class DefaultCrudController : BasicCrudController<object>
+    internal class DefaultCrudControllerBase : CrudControllerBase<object>
     {
-        public DefaultCrudController(IMongoClient client) : base(client, new DefaultCrudControllerFilter()) { }
+        private readonly IMongoCollection<object> _collection;
 
-        public override async Task<IActionResult> PutDocumentAsync(string database, string collection, [FromBody] object document)
+        public DefaultCrudControllerBase(IMongoClient client, string database, string collection) : base(client, database, collection)
         {
-            GetCollection(database, collection).DeleteMany(Builders<object>.Filter.Eq(MongoDbExtensions.Id, ((Document) document).Id));
-            await PostDocumentAsync(database, collection, document);
-            return await base.PutDocumentAsync(database, collection, document);
+            _collection = client.GetDatabase(database).GetCollection<object>(collection);
+        }
+
+        public override async Task<IActionResult> PutDocumentAsync([FromBody] object document)
+        {
+            _collection.DeleteMany(Builders<object>.Filter.Eq(MongoDbExtensions.Id, ((Document) document).Id));
+            await PostDocumentAsync(document);
+            return await base.PutDocumentAsync(document);
         }
     }
 }

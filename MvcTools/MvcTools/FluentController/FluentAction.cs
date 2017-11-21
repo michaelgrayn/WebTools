@@ -16,7 +16,7 @@ namespace MvcTools.FluentController
     /// </summary>
     /// <typeparam name="TIn">The type of the client input to the action.</typeparam>
     /// <typeparam name="TOut">The type of the input for the success method.</typeparam>
-    public sealed class FluentAction<TIn, TOut> where TIn : IValidatable
+    public sealed class FluentAction<TIn, TOut>
     {
         /// <summary>
         /// The main action to perform. Returns a model for the success method.
@@ -94,7 +94,7 @@ namespace MvcTools.FluentController
                 var tasks = _taskList.Select(task => task(_parameter.Parameter)).ToList();
                 foreach (var task in tasks) await task;
 
-                return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
+                return SuccessInvoker(model);
             }
             catch (Exception e)
             {
@@ -121,6 +121,16 @@ namespace MvcTools.FluentController
         private IActionResult ErrorInvoker(Exception exception = null)
         {
             return _error?.Invoke(exception) ?? FluentControllerBase.DefaultError;
+        }
+
+        /// <summary>
+        /// Performs the success action.
+        /// </summary>
+        /// <param name="model">The data for the success action.</param>
+        /// <returns>An success result.</returns>
+        private IActionResult SuccessInvoker(TOut model)
+        {
+            return _success?.Invoke(model) ?? FluentControllerBase.DefaultSuccess;
         }
     }
 }

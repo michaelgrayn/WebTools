@@ -7,6 +7,7 @@ namespace MvcTools.Tests.MonogDb
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using MongoDb;
     using MongoDB.Bson;
     using MongoDB.Driver;
     using ResultTypes;
@@ -20,48 +21,48 @@ namespace MvcTools.Tests.MonogDb
         [TestMethod]
         public async Task TestGetDocumentsAsync()
         {
-            var controller = new CrudController(new MongoClient());
-            var documents = await controller.GetDocumentsAsync(Database, Collection);
+            var controller = new InternalController(new MongoClient(), Database, Collection);
+            var documents = await controller.GetDocumentsAsync(FilterDefinition<Document>.Empty.CrudFilter());
             Assert.IsInstanceOfType(documents, typeof(JsonStringResult));
         }
 
         [TestMethod]
         public async Task TestPostDocumentAsync()
         {
-            var controller = new CrudController(new MongoClient());
-            var result = await controller.PostDocumentAsync(Database, Collection, new Document { Id = ObjectId.GenerateNewId() });
+            var controller = new InternalController(new MongoClient(), Database, Collection);
+            var result = await controller.PostDocumentAsync(new Document { Id = ObjectId.GenerateNewId() });
             Assert.IsInstanceOfType(result, typeof(JsonStringResult));
-            result = await controller.PostDocumentAsync(Database, Collection, new Document { Id = ObjectId.Empty });
+            result = await controller.PostDocumentAsync(new Document { Id = ObjectId.Empty });
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
 
         [TestMethod]
         public async Task TestPutDocumentAsync()
         {
-            var controller = new CrudController(new MongoClient());
-            var result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.GenerateNewId() });
+            var controller = new InternalController(new MongoClient(), Database, Collection);
+            var result = await controller.PutDocumentAsync(new Document { Id = ObjectId.GenerateNewId() });
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.Empty });
+            result = await controller.PutDocumentAsync(new Document { Id = ObjectId.Empty });
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
 
         [TestMethod]
         public async Task TestDefaultPutDocumentAsync()
         {
-            var controller = new DefaultCrudController(new MongoClient());
-            var result = await controller.PutDocumentAsync(Database, Collection, new Document { Id = ObjectId.GenerateNewId() });
+            var controller = new DefaultCrudControllerBase(new MongoClient(), Database, Collection);
+            var result = await controller.PutDocumentAsync(new Document { Id = ObjectId.GenerateNewId() });
             Assert.IsInstanceOfType(result, typeof(JsonResult));
         }
 
         [TestMethod]
         public async Task TestDeleteDocumentAsync()
         {
-            var controller = new CrudController(new MongoClient());
+            var controller = new InternalController(new MongoClient(), Database, Collection);
             var document = new Document { Id = ObjectId.GenerateNewId() };
-            await controller.PostDocumentAsync(Database, Collection, document);
-            var result = await controller.DeleteDocumentAsync(Database, Collection, document.Id);
+            await controller.PostDocumentAsync(document);
+            var result = await controller.DeleteDocumentAsync(document.Id);
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            result = await controller.DeleteDocumentAsync(Database, Collection, ObjectId.Empty);
+            result = await controller.DeleteDocumentAsync(ObjectId.Empty);
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
     }

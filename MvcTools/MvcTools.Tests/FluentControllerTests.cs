@@ -4,6 +4,8 @@
 
 namespace MvcTools.Tests
 {
+    using System.Collections.Generic;
+    using System.Text;
     using System.Threading.Tasks;
     using FluentController;
     using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,14 @@ namespace MvcTools.Tests
         {
             return false;
         }
+
+        public static void SetDefaults()
+        {
+            FluentControllerBase.DefaultError = new BadRequestResult();
+            FluentControllerBase.DefaultSuccess = new EmptyResult();
+            var content = new ContentEncoder { Encoding = Encoding.UTF8 };
+            content.Content = content.Encoding.ToString();
+        }
     }
 
     [TestClass]
@@ -24,8 +34,8 @@ namespace MvcTools.Tests
         [TestMethod]
         public async Task TestParameterMainActionSuccessAsync()
         {
-            var parameter = new NoValidation();
-            var response = await CheckRequest(parameter).Action(async s => await Task.FromResult(s)).Success(Xml).ResponseAsync();
+            var parameter = new List<int> { 1, 2, 3 };
+            var response = await RequestParameter(parameter).Action(async s => await Task.FromResult(s)).Success(Xml).ResponseAsync();
             Assert.IsInstanceOfType(response, typeof(XmlResult));
         }
 
@@ -33,6 +43,7 @@ namespace MvcTools.Tests
         public async Task TestMultipleActions()
         {
             // since there is no success call the default will be used
+            Fail.SetDefaults();
             var response = await Action(() => Task.FromResult("Failure"))
                 .Action(async x => await Task.Delay(500))
                 .Action(async x => await Task.Delay(500))
@@ -43,8 +54,9 @@ namespace MvcTools.Tests
         [TestMethod]
         public async Task TestFailure()
         {
-            var p = new Fail();
-            var response = await CheckRequest(p).Action(async x => await Task.Delay(100)).Error(e => new AcceptedResult()).ResponseAsync();
+            var response = await RequestParameter(new Fail())
+                .Action(async x => await Task.Delay(100))
+                .Error(e => new AcceptedResult()).ResponseAsync();
             Assert.IsInstanceOfType(response, typeof(AcceptedResult));
         }
     }

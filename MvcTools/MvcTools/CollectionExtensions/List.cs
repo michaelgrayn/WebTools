@@ -12,11 +12,11 @@ namespace MvcTools.CollectionExtensions
     public static class List
     {
         /// <summary>
-        /// Removes the last element of an <see cref="IList{T}" />.
+        /// Removes the <see cref="IList{T}" /> item at the last index (source.Count - 1).
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">The <see cref="IList{T}" />.</param>
-        /// <exception cref="IList{T}">The <see cref="System.NotSupportedException" /> is read-only.</exception>
+        /// <exception cref="System.NotSupportedException">The <see cref="IList{T}" /> is read-only.</exception>
         public static void Remove<TSource>(this IList<TSource> source)
         {
             source.RemoveAt(source.Count - 1);

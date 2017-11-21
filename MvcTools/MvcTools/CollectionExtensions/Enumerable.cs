@@ -62,5 +62,17 @@ namespace MvcTools.CollectionExtensions
         {
             return !source.Any(predicate);
         }
+
+        /// <summary>
+        /// Creates an <see cref="IList{T}" /> from an <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">The <see cref="IEnumerable{T}" /> to create an <see cref="IList{T}" /> from.</param>
+        /// <returns>An <see cref="IList{T}" /> that contains elements from the input sequence.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static IList<TSource> ToIList<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.ToList();
+        }
     }
 }

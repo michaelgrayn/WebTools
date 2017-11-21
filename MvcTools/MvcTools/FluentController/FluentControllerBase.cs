@@ -70,10 +70,9 @@ namespace MvcTools.FluentController
         /// <typeparam name="TOut">The type of the input for the success result.</typeparam>
         /// <param name="action">This action takes no parameters and returns a <typeparamref name="TOut" />.</param>
         /// <returns>A fluent action.</returns>
-        [NonAction]
-        protected static FluentAction<NoValidation, TOut> Action<TOut>([NotNull] Func<Task<TOut>> action)
+        protected static FluentAction<object, TOut> Action<TOut>([NotNull] Func<Task<TOut>> action)
         {
-            return new FluentAction<NoValidation, TOut>(new FluentParameter<NoValidation>(new NoValidation(), true), async x => await action());
+            return new FluentAction<object, TOut>(new FluentParameter<object>(null, true), async x => await action());
         }
 
         /// <summary>
@@ -82,8 +81,7 @@ namespace MvcTools.FluentController
         /// <typeparam name="TIn">The type of the client input.</typeparam>
         /// <param name="parameter">The input to the action.</param>
         /// <returns>A fluent action.</returns>
-        [NonAction]
-        protected FluentParameter<TIn> CheckRequest<TIn>(TIn parameter) where TIn : IValidatable
+        protected FluentParameter<TIn> RequestParameter<TIn>(TIn parameter)
         {
             return new FluentParameter<TIn>(parameter, ModelState.IsValid);
         }

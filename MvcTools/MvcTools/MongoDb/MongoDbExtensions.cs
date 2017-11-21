@@ -38,18 +38,6 @@ namespace MvcTools.MongoDb
         }
 
         /// <summary>
-        /// Adds transient DI for a MongoDb connection and database.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <param name="connection">MongoDb connection string.</param>
-        /// <param name="database">Database name.</param>
-        /// <returns>The service collection after adding MongoDb DI.</returns>
-        public static IServiceCollection AddMongoClientIoC(this IServiceCollection services, string connection, string database)
-        {
-            return services.AddTransient(x => new MongoClient(connection).GetDatabase(database));
-        }
-
-        /// <summary>
         /// Creates a filter that finds all the documents by _id.
         /// </summary>
         /// <typeparam name="TDocument">The type of the documents.</typeparam>

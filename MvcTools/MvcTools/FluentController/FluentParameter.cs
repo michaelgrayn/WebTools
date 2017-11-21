@@ -12,7 +12,7 @@ namespace MvcTools.FluentController
     /// A builder for fluent controller actions.
     /// </summary>
     /// <typeparam name="TIn">The type of the input to the main action method.</typeparam>
-    public sealed class FluentParameter<TIn> where TIn : IValidatable
+    public sealed class FluentParameter<TIn>
     {
         /// <summary>
         /// The state of the model binding.
@@ -24,7 +24,7 @@ namespace MvcTools.FluentController
         /// </summary>
         /// <param name="parameter">The client input.</param>
         /// <param name="modelState">Is the model state valid?</param>
-        internal FluentParameter([NotNull] TIn parameter, bool modelState)
+        internal FluentParameter(TIn parameter, bool modelState)
         {
             Parameter = parameter;
             _modelState = modelState;
@@ -33,7 +33,14 @@ namespace MvcTools.FluentController
         /// <summary>
         /// Is the client input valid?
         /// </summary>
-        public bool Valid => _modelState && Parameter.Validate();
+        public bool Valid
+        {
+            get
+            {
+                if (Parameter is IValidatable validatable) return _modelState && validatable.Validate();
+                return _modelState;
+            }
+        }
 
         /// <summary>
         /// Gets the client input.
