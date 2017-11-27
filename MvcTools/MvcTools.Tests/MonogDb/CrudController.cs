@@ -19,32 +19,32 @@ namespace MvcTools.Tests.MonogDb
             _collection = client.GetDatabase(database).GetCollection<Document>(collection);
         }
 
-        public override async Task<IActionResult> GetDocumentsAsync(CrudControllerFilter<Document> document = null)
+        public async Task<IActionResult> GetDocuments(CrudControllerFilter<Document> document = null)
         {
             await Reset();
-            return await base.GetDocumentsAsync(document);
+            return await GetDocumentsAsync(document);
         }
 
-        public override async Task<IActionResult> PostDocumentAsync([FromBody] Document document)
+        public async Task<IActionResult> PostDocument([FromBody] Document document)
         {
             if (document.Id == ObjectId.Empty) return BadRequest();
             await Reset();
-            return await base.PostDocumentAsync(document);
+            return await PostDocumentAsync(document);
         }
 
-        public override async Task<IActionResult> PutDocumentAsync([FromBody] Document document)
+        public async Task<IActionResult> PutDocument([FromBody] Document document)
         {
             if (document.Id == ObjectId.Empty) return BadRequest();
             await Reset();
             _collection.InsertOne(document);
-            return await base.PutDocumentAsync(document);
+            return await PutDocumentAsync(document);
         }
 
-        public override async Task<IActionResult> DeleteDocumentAsync(ObjectId document)
+        public async Task<IActionResult> DeleteDocument(ObjectId document)
         {
             if (document == ObjectId.Empty) return BadRequest();
             await Reset();
-            return await base.DeleteDocumentAsync(document);
+            return await DeleteDocumentAsync(document);
         }
 
         private async Task Reset()

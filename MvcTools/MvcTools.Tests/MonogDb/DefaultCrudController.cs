@@ -18,11 +18,11 @@ namespace MvcTools.Tests.MonogDb
             _collection = client.GetDatabase(database).GetCollection<object>(collection);
         }
 
-        public override async Task<IActionResult> PutDocumentAsync([FromBody] object document)
+        public async Task<IActionResult> PutDocument([FromBody] object document)
         {
             _collection.DeleteMany(Builders<object>.Filter.Eq(MongoDbExtensions.Id, ((Document) document).Id));
             await PostDocumentAsync(document);
-            return await base.PutDocumentAsync(document);
+            return await PutDocumentAsync(document);
         }
     }
 }

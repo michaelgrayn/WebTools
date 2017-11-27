@@ -44,7 +44,7 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="filter">Provides filtering and paging options.</param>
         /// <returns>All documents matching the filter.</returns>
-        public virtual async Task<IActionResult> GetDocumentsAsync(CrudControllerFilter<TDocument> filter = null)
+        protected async Task<IActionResult> GetDocumentsAsync(CrudControllerFilter<TDocument> filter = null)
         {
             return await Action(async () =>
             {
@@ -60,7 +60,7 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="document">The document to insert.</param>
         /// <returns>The document after insert.</returns>
-        public virtual async Task<IActionResult> PostDocumentAsync([FromBody] TDocument document)
+        protected async Task<IActionResult> PostDocumentAsync(TDocument document)
         {
             return await Action(async () =>
             {
@@ -74,7 +74,7 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="document">The document to update. Must have an id property.</param>
         /// <returns>The replace result.</returns>
-        public virtual async Task<IActionResult> PutDocumentAsync([FromBody] TDocument document)
+        protected async Task<IActionResult> PutDocumentAsync(TDocument document)
         {
             return await Action(async () =>
             {
@@ -90,7 +90,7 @@ namespace MvcTools.MongoDb
         /// </summary>
         /// <param name="document">The document to delete.</param>
         /// <returns>The delete result.</returns>
-        public virtual async Task<IActionResult> DeleteDocumentAsync(ObjectId document)
+        protected async Task<IActionResult> DeleteDocumentAsync(ObjectId document)
         {
             return await Action(async () => await _collection.DeleteOneAsync(IdFilter(document))).Success(Json).ResponseAsync();
         }
