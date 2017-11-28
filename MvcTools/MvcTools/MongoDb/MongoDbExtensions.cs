@@ -92,8 +92,7 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="document">The document to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document)
-            where TDocument : MongoDbDocument<TDocument>
+        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument<TDocument>
         {
             return await collection.ReplaceOneAsync(document, document, Upsert);
         }
@@ -105,8 +104,7 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="documents">The documents to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents)
-            where TDocument : MongoDbDocument<TDocument>
+        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents) where TDocument : MongoDbDocument<TDocument>
         {
             var models = documents.AsParallel().Select(document =>
             {
