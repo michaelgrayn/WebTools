@@ -8,9 +8,9 @@ namespace MvcTools.Tests.MonogDb
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Infrastructure;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using MongoDb;
     using MongoDB.Driver;
 
     [TestClass]
@@ -33,7 +33,7 @@ namespace MvcTools.Tests.MonogDb
             document.Value = 1;
             save = await collection.SaveAsync(document);
             Assert.AreEqual(save.ModifiedCount, 1);
-            var delete = await collection.DeleteOneAsync(document);
+            var delete = await collection.DeleteOneAsync(document.Filter<Document>());
             Assert.AreEqual(delete.DeletedCount, 1);
         }
 
@@ -57,16 +57,6 @@ namespace MvcTools.Tests.MonogDb
             var documents = new List<Document> { new Document(), new Document() };
             await collection.SaveManyAsync(documents);
             Assert.AreEqual(documents.Count, (await collection.FindAllAsync()).Count);
-        }
-
-        [TestMethod]
-        public async Task TestMultiFilterAsync()
-        {
-            var collection = await GetCollection(3);
-            var documents = new List<Document> { new Document(), new Document() };
-            await collection.SaveManyAsync(documents);
-            await collection.DeleteManyAsync(MongoDbExtensions.CreateMultiIdFilter<Document>(documents.Select(x => x.Id)));
-            Assert.AreEqual(await collection.CountAsync(FilterDefinition<Document>.Empty), 0);
         }
 
         [TestMethod]

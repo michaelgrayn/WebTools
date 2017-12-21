@@ -4,11 +4,11 @@
 
 namespace MvcTools.Tests.MonogDb
 {
-    using MongoDb;
+    using Domain;
     using MongoDB.Bson;
 
     // ReSharper disable All
-    public class Document : MongoDbDocument<Document>
+    public class Document : MongoDbDocument
     {
         public override ObjectId Id
         {

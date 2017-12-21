@@ -2,11 +2,12 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.MongoDb
+namespace MvcTools.Infrastructure
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Domain;
     using Microsoft.Extensions.DependencyInjection;
     using MongoDB.Bson;
     using MongoDB.Driver;
@@ -24,7 +25,7 @@ namespace MvcTools.MongoDb
         /// <summary>
         /// Update options to do an upsert.
         /// </summary>
-        private static readonly UpdateOptions Upsert = new UpdateOptions { IsUpsert = true };
+        private static readonly UpdateOptions _upsert = new UpdateOptions { IsUpsert = true };
 
         /// <summary>
         /// Adds transient DI for a MongoDb connection.
@@ -38,14 +39,14 @@ namespace MvcTools.MongoDb
         }
 
         /// <summary>
-        /// Creates a filter that finds all the documents by _id.
+        /// Converts a <see cref="MongoDbDocument"/> to a <see cref="FilterDefinition{TDocument}"/>.
         /// </summary>
-        /// <typeparam name="TDocument">The type of the documents.</typeparam>
-        /// <param name="documents">The documents to create a filter for.</param>
-        /// <returns>A filter that finds all the documents by _id.</returns>
-        public static FilterDefinition<TDocument> CreateMultiIdFilter<TDocument>(IEnumerable<ObjectId> documents)
+        /// <typeparam name="TDocument">The type of the document.</typeparam>
+        /// <param name="document">The document.</param>
+        /// <returns></returns>
+        public static FilterDefinition<TDocument> Filter<TDocument>(this MongoDbDocument document)
         {
-            return Builders<TDocument>.Filter.In(Id, documents);
+            return Builders<TDocument>.Filter.Eq(Id, document.Id);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace MvcTools.MongoDb
         /// <returns>Documents with an _id in <paramref name="ids" />.</returns>
         public static async Task<IList<TDocument>> FindByIdAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<ObjectId> ids)
         {
-            return await collection.Find(CreateMultiIdFilter<TDocument>(ids)).ToListAsync();
+            return await collection.Find(Builders<TDocument>.Filter.In(Id, ids)).ToListAsync();
         }
 
         /// <summary>
@@ -92,9 +93,9 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="document">The document to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument<TDocument>
+        public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument
         {
-            return await collection.ReplaceOneAsync(document, document, Upsert);
+            return await collection.ReplaceOneAsync(document.Filter<TDocument>(), document, _upsert);
         }
 
         /// <summary>
@@ -104,12 +105,12 @@ namespace MvcTools.MongoDb
         /// <param name="collection">The <see cref="IMongoCollection{TDocument}" />.</param>
         /// <param name="documents">The documents to save.</param>
         /// <returns>The result of the update operation.</returns>
-        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents) where TDocument : MongoDbDocument<TDocument>
+        public static async Task SaveManyAsync<TDocument>(this IMongoCollection<TDocument> collection, IEnumerable<TDocument> documents) where TDocument : MongoDbDocument
         {
             var models = documents.AsParallel().Select(document =>
             {
-                if (document.Id == default) document.Id = ObjectId.GenerateNewId();
-                return new ReplaceOneModel<TDocument>(document, document) { IsUpsert = true };
+                //if (document.Id == default) document.Id = ObjectId.GenerateNewId();
+                return new ReplaceOneModel<TDocument>(document.Filter<TDocument>(), document) { IsUpsert = true };
             });
             await collection.BulkWriteAsync(models);
         }
