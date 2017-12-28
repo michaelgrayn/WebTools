@@ -1,8 +1,8 @@
-﻿// MvcTools.Enumerable.cs
+﻿// MvcTools.Domain.Enumerable.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.CollectionExtensions
+namespace MvcTools.Domain.Extensions
 {
     using System;
     using System.Collections.Generic;

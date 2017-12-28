@@ -1,8 +1,8 @@
-﻿// MvcTools.List.cs
+﻿// MvcTools.Domain.List.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.CollectionExtensions
+namespace MvcTools.Domain.Extensions
 {
     using System.Collections.Generic;
 

@@ -2,7 +2,7 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Domain
+namespace MvcTools.Domain.MongoDb
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

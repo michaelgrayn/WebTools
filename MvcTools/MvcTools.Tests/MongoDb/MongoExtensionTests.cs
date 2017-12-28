@@ -2,7 +2,7 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Tests.MonogDb
+namespace MvcTools.Tests.MongoDb
 {
     using System;
     using System.Collections.Generic;

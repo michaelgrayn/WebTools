@@ -2,9 +2,9 @@
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
-namespace MvcTools.Tests.MonogDb
+namespace MvcTools.Tests.MongoDb
 {
-    using Domain;
+    using Domain.MongoDb;
     using MongoDB.Bson;
 
     // ReSharper disable All
