@@ -7,7 +7,7 @@ namespace MvcTools.Infrastructure
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain;
+    using Domain.MongoDb;
     using Microsoft.Extensions.DependencyInjection;
     using MongoDB.Bson;
     using MongoDB.Driver;
@@ -25,7 +25,7 @@ namespace MvcTools.Infrastructure
         /// <summary>
         /// Update options to do an upsert.
         /// </summary>
-        private static readonly UpdateOptions _upsert = new UpdateOptions { IsUpsert = true };
+        private static readonly UpdateOptions Upsert = new UpdateOptions { IsUpsert = true };
 
         /// <summary>
         /// Adds transient DI for a MongoDb connection.
@@ -95,7 +95,7 @@ namespace MvcTools.Infrastructure
         /// <returns>The result of the update operation.</returns>
         public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument
         {
-            return await collection.ReplaceOneAsync(document.Filter<TDocument>(), document, _upsert);
+            return await collection.ReplaceOneAsync(document.Filter<TDocument>(), document, Upsert);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace MvcTools.Infrastructure
         {
             var models = documents.AsParallel().Select(document =>
             {
-                //if (document.Id == default) document.Id = ObjectId.GenerateNewId();
+                if (document.Id == default) document.Id = ObjectId.GenerateNewId();
                 return new ReplaceOneModel<TDocument>(document.Filter<TDocument>(), document) { IsUpsert = true };
             });
             await collection.BulkWriteAsync(models);

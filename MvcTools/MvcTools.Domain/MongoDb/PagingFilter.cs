@@ -10,7 +10,7 @@ namespace MvcTools.Domain.MongoDb
     /// <summary>
     /// Provides filtering an paging for repositories.
     /// </summary>
-    public class PagingFilter<TDocument>
+    public struct PagingFilter<TDocument>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PagingFilter{TDocument}" /> class.

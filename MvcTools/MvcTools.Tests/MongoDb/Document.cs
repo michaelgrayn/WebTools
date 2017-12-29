@@ -7,7 +7,6 @@ namespace MvcTools.Tests.MongoDb
     using Domain.MongoDb;
     using MongoDB.Bson;
 
-    // ReSharper disable All
     public class Document : MongoDbDocument
     {
         public override ObjectId Id

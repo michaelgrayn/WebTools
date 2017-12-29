@@ -15,7 +15,7 @@ namespace MvcTools.Domain.MongoDb
         /// </summary>
         /// <param name="pagingFilter">Paging options and filtering for the find.</param>
         /// <returns>All documents matching the filter.</returns>
-        Task<IList<TDocument>> GetDocumentsAsync(PagingFilter<TDocument> pagingFilter);
+        Task<IList<TDocument>> GetDocumentsAsync(PagingFilter<TDocument> pagingFilter = default);
 
         /// <summary>
         /// Inserts and returns a document.

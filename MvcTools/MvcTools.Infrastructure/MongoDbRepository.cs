@@ -6,7 +6,7 @@ namespace MvcTools.Infrastructure
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain;
+    using Domain.MongoDb;
     using MongoDB.Bson;
     using MongoDB.Driver;
 
@@ -42,7 +42,7 @@ namespace MvcTools.Infrastructure
         }
 
         /// <inheritdoc />
-        public async Task<IList<TDocument>> GetDocumentsAsync(PagingFilter<TDocument> pagingFilter)
+        public async Task<IList<TDocument>> GetDocumentsAsync(PagingFilter<TDocument> pagingFilter = default)
         {
             var find = _collection.Find(pagingFilter.Filter ?? FilterDefinition<TDocument>.Empty).Sort(Builders<TDocument>.Sort.Ascending(MongoDbExtensions.Id));
             if (pagingFilter.PageNumber > -1 && pagingFilter.PageSize > -1) find = find.Skip(pagingFilter.PageNumber * pagingFilter.PageSize).Limit(pagingFilter.PageSize);
