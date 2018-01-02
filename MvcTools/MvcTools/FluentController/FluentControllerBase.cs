@@ -9,7 +9,7 @@ namespace MvcTools.FluentController
     using System.Xml.Serialization;
     using JetBrains.Annotations;
     using Microsoft.AspNetCore.Mvc;
-    using ResultTypes;
+    using MvcTools.ResultTypes;
 
     /// <summary>
     /// The base class for fluent controllers.

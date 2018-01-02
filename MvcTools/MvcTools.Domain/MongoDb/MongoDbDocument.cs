@@ -1,4 +1,4 @@
-﻿// MvcTools.MongoDbDocument.cs
+﻿// MvcTools.Domain.MongoDbDocument.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
