@@ -7,7 +7,7 @@ namespace MvcTools.Tests
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Domain.Extensions;
+    using MvcTools.Domain.Extensions;
 
     [TestClass]
     public class CollectionExtensionTests

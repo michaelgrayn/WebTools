@@ -7,24 +7,24 @@ namespace MvcTools.Tests
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-    using FluentController;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ResultTypes;
+    using MvcTools.FluentController;
+    using MvcTools.ResultTypes;
 
     public class Fail : IValidatable
     {
-        public bool Validate()
-        {
-            return false;
-        }
-
         public static void SetDefaults()
         {
             FluentControllerBase.DefaultError = new BadRequestResult();
             FluentControllerBase.DefaultSuccess = new EmptyResult();
-            var content = new ContentEncoder { Encoding = Encoding.UTF8 };
+            var content = new EncodedContentResult { Encoding = Encoding.UTF8 };
             content.Content = content.Encoding.ToString();
+        }
+
+        public bool Validate()
+        {
+            return false;
         }
     }
 

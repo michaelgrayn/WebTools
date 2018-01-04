@@ -1,4 +1,4 @@
-﻿// MvcTools.Tests.MongoExtensionTests.cs
+﻿// MvcTools.Tests.MongoDbRepositoryTests.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
@@ -6,11 +6,11 @@ namespace MvcTools.Tests.MongoDb
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.MongoDb;
-    using Infrastructure;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using MongoDB.Driver;
+    using MvcTools.Domain.MongoDb;
+    using MvcTools.Infrastructure;
 
     [TestClass]
     public class MongoDbRepositoryTests

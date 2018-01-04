@@ -7,7 +7,7 @@ namespace MvcTools.ResultTypes
     /// <summary>
     /// An action result which writes the given JSON to the result stream.
     /// </summary>
-    public class JsonStringResult : ContentEncoder
+    public class JsonStringResult : EncodedContentResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonStringResult" /> class.

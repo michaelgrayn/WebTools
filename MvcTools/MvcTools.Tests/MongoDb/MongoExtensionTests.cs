@@ -8,10 +8,10 @@ namespace MvcTools.Tests.MongoDb
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Infrastructure;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using MongoDB.Driver;
+    using MvcTools.Infrastructure;
 
     [TestClass]
     public class MongoExtensionTests

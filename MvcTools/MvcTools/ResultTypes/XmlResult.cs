@@ -10,7 +10,7 @@ namespace MvcTools.ResultTypes
     /// <summary>
     /// Represents a class that is used to send XML-formatted content to the response.
     /// </summary>
-    public sealed class XmlResult : ContentEncoder
+    public class XmlResult : EncodedContentResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlResult" /> class.

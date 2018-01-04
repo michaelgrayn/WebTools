@@ -1,0 +1,22 @@
+{
+  "name": "cb",
+  "version": "1.0.0",
+  "description": "Cb makes Typescript a little bit more like C#",
+  "main": "index.js",
+  "scripts": {
+    "test": "cbtest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhdejonge/MVC-Tools.git"
+  },
+  "keywords": [
+    "Typescript"
+  ],
+  "author": "Matthew DeJonge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mhdejonge/MVC-Tools/issues"
+  },
+  "homepage": "https://github.com/mhdejonge/MVC-Tools#readme"
+}

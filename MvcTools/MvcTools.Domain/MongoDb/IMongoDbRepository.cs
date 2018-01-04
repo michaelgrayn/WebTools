@@ -8,7 +8,7 @@ namespace MvcTools.Domain.MongoDb
     using System.Threading.Tasks;
     using MongoDB.Bson;
 
-    public interface IMongoDbRepository<TDocument> 
+    public interface IMongoDbRepository<TDocument>
     {
         /// <summary>
         /// Gets all documents matching the filter.

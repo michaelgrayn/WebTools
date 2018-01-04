@@ -6,9 +6,9 @@ namespace MvcTools.Infrastructure
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Domain.MongoDb;
     using MongoDB.Bson;
     using MongoDB.Driver;
+    using MvcTools.Domain.MongoDb;
 
     /// <summary>
     /// A repository for MongoDb collections that handles basic crud operations.
@@ -24,7 +24,7 @@ namespace MvcTools.Infrastructure
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoDbRepository{TDocument}" /> class.
         /// </summary>
-        /// <param name="collection">MongoDb collection of <typeparamref name="TDocument"/>.</param>
+        /// <param name="collection">MongoDb collection of <typeparamref name="TDocument" />.</param>
         public MongoDbRepository(IMongoCollection<TDocument> collection)
         {
             _collection = collection;
@@ -69,6 +69,7 @@ namespace MvcTools.Infrastructure
                 var id = document.ToBsonDocument().GetValue(MongoDbExtensions.Id).AsObjectId;
                 idFilter = Builders<TDocument>.Filter.Eq(MongoDbExtensions.Id, id);
             }
+
             await _collection.ReplaceOneAsync(idFilter, document);
         }
 

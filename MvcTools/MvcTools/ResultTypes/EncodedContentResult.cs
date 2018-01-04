@@ -1,4 +1,8 @@
-﻿namespace MvcTools.ResultTypes
+﻿// MvcTools.ContentEncoder.cs
+// By Matthew DeJonge
+// Email: mhdejong@umich.edu
+
+namespace MvcTools.ResultTypes
 {
     using System.IO;
     using System.Text;
@@ -9,7 +13,7 @@
     /// <summary>
     /// Encodes content in a specified encoding.
     /// </summary>
-    public class ContentEncoder : ContentResult
+    public class EncodedContentResult : ContentResult
     {
         /// <summary>
         /// Gets or sets the encoding.

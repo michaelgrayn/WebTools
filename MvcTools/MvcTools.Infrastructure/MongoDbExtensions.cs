@@ -1,4 +1,4 @@
-﻿// MvcTools.MongoDbExtensions.cs
+﻿// MvcTools.Infrastructure.MongoDbExtensions.cs
 // By Matthew DeJonge
 // Email: mhdejong@umich.edu
 
@@ -7,10 +7,10 @@ namespace MvcTools.Infrastructure
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain.MongoDb;
     using Microsoft.Extensions.DependencyInjection;
     using MongoDB.Bson;
     using MongoDB.Driver;
+    using MvcTools.Domain.MongoDb;
 
     /// <summary>
     /// Extensions for MongoDb.
@@ -25,7 +25,7 @@ namespace MvcTools.Infrastructure
         /// <summary>
         /// Update options to do an upsert.
         /// </summary>
-        private static readonly UpdateOptions Upsert = new UpdateOptions { IsUpsert = true };
+        private static readonly UpdateOptions _upsert = new UpdateOptions { IsUpsert = true };
 
         /// <summary>
         /// Adds transient DI for a MongoDb connection.
@@ -39,7 +39,7 @@ namespace MvcTools.Infrastructure
         }
 
         /// <summary>
-        /// Converts a <see cref="MongoDbDocument"/> to a <see cref="FilterDefinition{TDocument}"/>.
+        /// Converts a <see cref="MongoDbDocument" /> to a <see cref="FilterDefinition{TDocument}" />.
         /// </summary>
         /// <typeparam name="TDocument">The type of the document.</typeparam>
         /// <param name="document">The document.</param>
@@ -95,7 +95,7 @@ namespace MvcTools.Infrastructure
         /// <returns>The result of the update operation.</returns>
         public static async Task<ReplaceOneResult> SaveAsync<TDocument>(this IMongoCollection<TDocument> collection, TDocument document) where TDocument : MongoDbDocument
         {
-            return await collection.ReplaceOneAsync(document.Filter<TDocument>(), document, Upsert);
+            return await collection.ReplaceOneAsync(document.Filter<TDocument>(), document, _upsert);
         }
 
         /// <summary>
