@@ -28,4 +28,16 @@ interface Array<T> {
      * @param index The index of the element to remove
      */
     removeAt(index: number): void;
+
+    /**
+     * Gets the first item from the array.
+     * @returns The first item of the array or undefined if empty.
+     */
+    first(): T;
+
+    /**
+     * Gets the last item from the array.
+     * @returns The last item of the array or undefined if empty.
+     */
+    last(): T;
 }

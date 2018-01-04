@@ -12,4 +12,12 @@ module Cb {
     Array.prototype.removeAt = function(this : Array<any>, index: number) {
         this.splice(index, 1);
     }
+
+    Array.prototype.first = function(this: Array<any>) {
+        return this[0];
+    }
+
+    Array.prototype.last = function(this: Array<any>) {
+        return this[this.length - 1];
+    }
 }
