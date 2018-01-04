@@ -21,9 +21,8 @@
   "homepage": "https://github.com/mhdejonge/MVC-Tools#readme",
   "devDependencies": {
     "@types/chai": "^4.0.10",
-    "@types/mocha": "^2.2.45"
-  },
-  "dependencies": {
-    "chai": "^4.1.2"
+    "@types/mocha": "^2.2.45",
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0"
   }
 }
