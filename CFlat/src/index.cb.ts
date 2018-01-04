@@ -3,18 +3,15 @@ export module Cb {
         return this.trim().length === 0;
     }
 
-    Array.prototype.add = function(this : Array<any>, element: any) {
-        this.push(element);
+    Array.prototype.pop = function(this : Array<any>, ...items: any[]) {
+        for (const item of items) {
+            this.popAt(this.indexOf(item));
+        }
+        return this.length;
     }
 
-    Array.prototype.remove = function(this : Array<any>, element?: any) {
-        let index = this.length - 1;
-        if(element) index = this.indexOf(element);
-        this.removeAt(index);
-    }
-
-    Array.prototype.removeAt = function(this : Array<any>, index: number) {
-        this.splice(index, 1);
+    Array.prototype.popAt = function(this : Array<any>, index: number) {
+        return this.splice(index, 1).first();
     }
 
     Array.prototype.first = function(this: Array<any>) {

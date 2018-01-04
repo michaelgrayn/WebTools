@@ -7,37 +7,24 @@ interface String {
 
 interface Array<T> {
     /**
-     * Adds an element to the end of the array.
-     * @param element The element to add.
+     * Removes elements form the array, and returns the new length of the array.
+     * @param items The elements to remove.
      */
-    add(element: T): void;
+    pop(...items: T[]): void;
 
     /**
-     * Removes the element at the end of the array.
+     * Removes the element at the given index and returns it.
+     * @param index The index of the element to remove.
      */
-    remove(): void;
+    popAt(index: number): T;
 
     /**
-     * Removes an element form the array.
-     * @param element The element to remove.
-     */
-    remove(element: T): void;
-
-    /**
-     * Removes the element at the given index.
-     * @param index The index of the element to remove
-     */
-    removeAt(index: number): void;
-
-    /**
-     * Gets the first item from the array.
-     * @returns The first item of the array or undefined if empty.
+     * Gets the first element of the array or undefined if empty.
      */
     first(): T;
 
     /**
-     * Gets the last item from the array.
-     * @returns The last item of the array or undefined if empty.
+     * Gets the last element of the array or undefined if empty.
      */
     last(): T;
 }
