@@ -6,6 +6,7 @@
     "sourceMap": true,                     /* Generates corresponding '.map' file. */
     "removeComments": true,                /* Do not emit comments to output. */
     "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
+    "outDir": "dist",                      /* Redirect output structure to the directory. */
 
     /* Strict Type-Checking Options */
     "strict": true,                        /* Enable all strict type-checking options. */
@@ -20,5 +21,8 @@
     "noUnusedParameters": true,            /* Report errors on unused parameters. */
     "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
     "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

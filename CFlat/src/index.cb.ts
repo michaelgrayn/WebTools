@@ -1,4 +1,8 @@
-module Cb {
+export module Cb {
+    String.prototype.isBlank = function(this : string) {
+        return this.trim().length === 0;
+    }
+
     Array.prototype.add = function(this : Array<any>, element: any) {
         this.push(element);
     }
