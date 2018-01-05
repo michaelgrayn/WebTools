@@ -4,7 +4,7 @@
   "description": "Cb makes Typescript a little bit more like C#",
   "main": "index.js",
   "scripts": {
-    "test": "mocha dist/test/tests.js"
+    "test": "node ./build/test/"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,6 @@
   },
   "homepage": "https://github.com/mhdejonge/MVC-Tools#readme",
   "devDependencies": {
-    "@types/chai": "^4.0.10",
-    "@types/mocha": "^2.2.45",
-    "chai": "^4.1.2",
-    "mocha": "^4.1.0"
+    "should": "^13.2.0"
   }
 }
