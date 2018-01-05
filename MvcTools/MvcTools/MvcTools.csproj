@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<Authors>Matthew DeJonge</Authors>
+	  <Authors>Matthew DeJonge</Authors>
     <Company />
     <Product>MvcTools</Product>
     <Description>
@@ -11,25 +11,16 @@
       Contains:
         1) A fluent builder to help reduce the amount of code in your controllers.
         2) New result types.
-        3) Extension methods for collections.
-        4) MongoDb document base class and extension methods.
     </Description>
     <Copyright>Matthew DeJonge</Copyright>
-	<PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/mhdejonge/MVC-Tools</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mhdejonge/MVC-Tools</RepositoryUrl>
+	  <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mhdejonge/WebTools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mhdejonge/WebTools</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <NeutralLanguage />
     <PackageId>MvcTools</PackageId>
     <AssemblyName>MvcTools</AssemblyName>
     <RootNamespace>MvcTools</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

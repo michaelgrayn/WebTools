@@ -2,13 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Matthew DeJonge</Authors>
+    <Company />
+    <Product>MvcTools</Product>
+    <Description>
+      Classes and extension methods for MVC projects.
+      Contains:
+        1) MongoDb extension methods and repository.
+    </Description>
+    <Copyright>Matthew DeJonge</Copyright>
+    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mhdejonge/WebTools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mhdejonge/WebTools</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <NeutralLanguage />
+    <PackageId>MvcTools.Infrastructure</PackageId>
+    <AssemblyName>MvcTools.Infrastructure</AssemblyName>
+    <RootNamespace>MvcTools.Infrastructure</RootNamespace>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
