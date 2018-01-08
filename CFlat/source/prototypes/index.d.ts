@@ -7,16 +7,9 @@ interface String {
 
 interface Array<T> {
     /**
-     * Removes elements form the array, and returns the new length of the array.
-     * @param items The elements to remove.
+     * Determines whether the array contains any elements.
      */
-    pop(...items: T[]): void;
-
-    /**
-     * Removes the element at the given index and returns it.
-     * @param index The index of the element to remove.
-     */
-    popAt(index: number): T;
+    any(): boolean;
 
     /**
      * Gets the first element of the array or undefined if empty.
@@ -27,4 +20,16 @@ interface Array<T> {
      * Gets the last element of the array or undefined if empty.
      */
     last(): T;
+
+    /**
+     * Removes elements form the array, and returns the new length of the array.
+     * @param items The elements to remove.
+     */
+    popElements(...items: T[]): number;
+
+    /**
+     * Removes the element at the given index and returns it.
+     * @param index The zero-based location in the array of the element to remove.
+     */
+    spliceAt(index: number): T;
 }
