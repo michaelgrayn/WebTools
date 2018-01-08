@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/mhdejonge/MVC-Tools#readme",
   "devDependencies": {
+    "@types/colors": "^1.1.3",
+    "colors": "^1.1.2",
     "should": "^13.2.0"
   },
   "files": [
